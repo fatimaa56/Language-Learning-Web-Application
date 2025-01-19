@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Languages</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for ('static',filename='languages.css') }}">
+</head>
+<body>
+    <section class="header">
+        <div>
+            <nav>
+                <img src="static/logo.png" alt="Logo">
+                <ul>
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/about">ABOUT</a></li>
+                    <li class="dropdown">
+                        <a href="/languages">LANGUAGES ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/german">German</a></li>
+                            <li><a href="/spanish">Spanish</a></li>
+                            <li><a href="/italian">Italian</a></li>
+                            <li><a href="/french">French</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contact">CONTACT</a></li>
+                </ul>
+                {% if 'user_id' in session %}
+                <button><a href="/logout">LOGOUT</a></button>
+                {% else %}
+                <button><a href="/login">LOGIN / SIGN UP</a></button>
+                {% endif %}
+            </nav>
+        </div>
+        <div class="hero-section">
+            <div class="image-content">
+                <img src="static/language.png" alt="Language Journey">
+            </div>
+            <div class="text-content">
+                <h1>Embark on a Journey of Words</h1>
+                <p>Unlock the beauty of languages and dive into new cultures. Every word you learn is a step closer to understanding the world in a new way.  
+                From the bustling markets of Spain to the serene countryside of France, language is the bridge that connects hearts and minds.  
+                Let curiosity guide you, and let’s make learning more than just a task—make it an unforgettable adventure full of discovery and growth.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="language-cards-section">
+        <hr class="styled-hr">
+        <h2 class="styled-h2">Languages We Offer</h2>
+        <hr class="styled-hr">
+        <div class="language-grid">
+            <div class="language-card">
+                <h2>🇩🇪 German</h2>
+                <p>Master the German language with interactive lessons covering vocabulary, grammar, and cultural insights. From basic greetings to advanced conversations, our German course has you covered.</p>
+                <a href="/german" class="btn">Start Learning</a>
+            </div>
+
+            <div class="language-card">
+                <h2>🇪🇸 Spanish</h2>
+                <p>Learn one of the world’s most spoken languages. Our Spanish course focuses on practical phrases, sentence structure, and pronunciation, helping you communicate confidently in various situations.</p>
+                <a href="/spanish" class="btn">Start Learning</a>
+            </div>
+
+            <div class="language-card">
+                <h2>🇮🇹 Italian</h2>
+                <p>Learn Italian and immerse yourself in its rich history and culture. Our course covers conversational skills, grammar, vocabulary, and more to help you master the language.</p>
+                <a href="/italian" class="btn">Start Learning</a>
+            </div>
+
+            <div class="language-card">
+                <h2>🇫🇷 French</h2>
+                <p>From ordering a croissant to discussing world events, our French course guides you step by step. Develop listening, reading, and speaking skills while immersing yourself in French culture.</p>
+                <a href="/french" class="btn">Start Learning</a>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

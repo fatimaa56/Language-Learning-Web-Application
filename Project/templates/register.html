@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for ('static',filename='register.css')}}">
+</head>
+<body>
+    <section>
+        <div class="header">
+            <nav>
+                <img src="static/logo.png" alt="">
+                <ul>
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/about">ABOUT</a></li>
+                    <li class="dropdown">
+                        <a href="/languages">LANGUAGES ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/german">German</a></li>
+                            <li><a href="/spanish">Spanish</a></li>
+                            <li><a href="/italian">Italian</a></li>
+                            <li><a href="/french">French</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contact">CONTACT</a></li>
+                </ul>
+                <button><a href="/login">LOGIN</a></button>
+            </nav>
+        </div>
+        <!-- Registration Section -->
+        <div class="login">
+            <div class="login-left">
+                <img src="{{ url_for('static', filename='register1.png') }}" alt="Registration Image">
+            </div>
+            <div class="container">
+                <form action="/register" method="POST">
+                    {{ form.hidden_tag() }}
+                    <h1>Sign Up</h1>
+                    <p>Connect with us!</p>
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        {{ form.username.label(for="username") }}
+                        {{ form.username(id="username", class="form-control", placeholder="Username") }}
+
+                        {% if form.username.errors %}
+                            <ul>
+                                {% for error in form.username.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        {{ form.email.label }}
+                        {{ form.email(id="email", class="form-control", placeholder="Email") }}
+                        {% if form.email.errors %}
+                            <ul>
+                                {% for error in form.email.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="form-group">
+                        {{ form.password.label }}
+                        {{ form.password(id="password", class="form-control", placeholder="Password") }}
+                        {% if form.password.errors %}
+                            <ul>
+                                {% for error in form.password.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    {{ form.submit(class="btn btn-dark mt 4")}}
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

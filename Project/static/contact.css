@@ -1,0 +1,209 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    height: 100vh;
+    background-image: url('../static/bg4.png');
+    background-position: center;
+    background-size: cover;
+}
+
+nav {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+}
+nav img {
+    width: 100px;
+    height: 100px;
+}
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 80px;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 10px 20px;
+}
+
+nav ul li a:hover{
+    background-color: #f5bd05;
+}
+
+/* Vertical Line Separator */
+nav ul li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: 10%;
+    height: 70%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Dropdown Menu Styling */
+nav ul li .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;  /* Directly below the parent */
+    left: 0;
+    background-color: rgb(61, 60, 60);
+    list-style: none;
+    min-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+nav ul li .dropdown-menu li::after {
+    content: none; /* Disable the vertical line inside the dropdown */
+}
+
+nav ul li .dropdown-menu li {
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+nav ul li .dropdown-menu li:last-child {
+    border-bottom: none;
+}
+
+/* Show Dropdown on Hover */
+nav ul li:hover .dropdown-menu {
+    display: block;
+}
+
+/* Hover Effect */
+nav ul li .dropdown-menu a:hover {
+    background-color:  #f5bd05;
+}
+nav button {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f5bd05;
+}
+nav button a {
+    text-decoration: none;
+    color: white;
+    font-weight: 800;
+}
+
+.contact {
+    display: flex;
+    align-items: center;  /* Align text and image vertically */
+    justify-content: space-between;
+    padding: 0% 4%;  /* Adds space around the section */
+}
+
+.contact img {
+    width: 500px;
+    height: 450px;
+}
+
+.contact_left {
+    width: 45%;
+    display: flex;
+    justify-content: center; 
+    height: 470px;
+    animation: bounce 3s infinite;
+}
+
+.contact_right {
+    text-align: left;
+    padding: 35px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    margin-top: 10px;
+    background-color: white;
+    margin-right: 60px;
+    background-image: url('../static/quiz.png');
+}
+
+.contact_right h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.contact_right p {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form input styling */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #f5bd05;
+}
+
+textarea.form-control {
+    height: 130px;
+}
+
+/* Button styling */
+.btn {
+    width: 100%;
+    padding: 18px;
+    background-color: #f5bd05;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    color: white;
+    font-weight: 600;
+}
+
+.btn:hover {
+    background-color: #6b643d;
+}
+
+/* Flex container for first and last name */
+.name-fields {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px; /* Space between the fields */
+}
+
+.name-fields .form-group {
+    width: 48%;  /* Adjust width as needed */
+}
+
+/* Remove labels inside the form groups */
+.form-group label {
+    display: none;
+}

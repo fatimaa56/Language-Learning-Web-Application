@@ -1,0 +1,221 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.header {
+    height: 100vh;
+    background-image: url('../static/bg4.png');
+    background-position: center;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+nav {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+}
+nav img {
+    width: 100px;
+    height: 100px;
+}
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 80px;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 10px 20px;
+}
+nav ul li a:hover{
+    background-color: #f5bd05;
+}
+
+/* Vertical Line Separator */
+nav ul li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: 10%;
+    height: 70%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Dropdown Menu Styling */
+nav ul li .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;  /* Directly below the parent */
+    left: 0;
+    background-color: rgb(61, 60, 60);
+    list-style: none;
+    min-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+nav ul li .dropdown-menu li::after {
+    content: none; /* Disable the vertical line inside the dropdown */
+}
+
+nav ul li .dropdown-menu li {
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+nav ul li .dropdown-menu li:last-child {
+    border-bottom: none;
+}
+
+/* Show Dropdown on Hover */
+nav ul li:hover .dropdown-menu {
+    display: block;
+}
+
+/* Hover Effect */
+nav ul li .dropdown-menu a:hover {
+    background-color:  #f5bd05;
+}
+nav button {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f5bd05;
+}
+nav button a {
+    text-decoration: none;
+    color: white;
+    font-weight: 800;
+}
+/* Intro Section */
+.intro {
+    justify-content: center;
+    display: flex;
+    align-items: center;
+    padding: 0 85px;
+}
+
+.intro-right {
+    max-width: 600px;
+    height: auto;
+    color: white;
+}
+
+.intro-right h1 {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.intro-right p {
+    font-size: 1.3rem;
+    line-height: 1.8;
+    max-width: 600px;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.intro-left img {
+    width: 540px;
+    height: auto;
+}
+
+/* Content Section */
+.content {
+    flex-direction: column;
+    gap: 40px;
+    padding: 20px;
+}
+
+.section {
+    background: #fdfdfd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.section h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.phrases {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.phrase {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #eef5f9;
+    padding: 10px 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.phrase p {
+    margin: 0;
+    font-size: 18px;
+}
+
+.phrase span {
+    font-weight: bold;
+    color: #333;
+}
+
+.phrase button {
+    background: linear-gradient(to right, #008D44 33.33%, #fff 33.33% 66.66%, red 66.66%);
+    border: none;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.phrase button:hover {
+    background: #6b643d;
+}
+.quiz{
+    justify-self: center;
+}
+
+.quiz button{
+    background-color: #f5bd05;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    width: 200px;
+    margin: 5px
+}
+.quiz a{
+    color: white;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 20px
+}

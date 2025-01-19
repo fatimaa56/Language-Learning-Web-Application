@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn Italian A1</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='italian.css') }}">
+</head>
+<body>
+    <section class="header">
+        <div>
+            <nav>
+                <img src="static/logo.png" alt="">
+                <ul>
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/about">ABOUT</a></li>
+                    <li class="dropdown">
+                        <a href="/languages">LANGUAGES ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/german">German</a></li>
+                            <li><a href="/spanish">Spanish</a></li>
+                            <li><a href="/italian">Italian</a></li>
+                            <li><a href="/french">French</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contact">CONTACT</a></li>
+                </ul>
+                <button><a href="/logout">LOGOUT</a></button>
+            </nav>
+        </div>
+        <div class="intro">
+            <div class="intro-left">
+                <img src="static/italy.png" alt="Italian Culture">
+            </div>
+            <div class="intro-right">
+                <h1><span style="color: #F5BD05;">🇮🇹</span> Learn Italian - A1 Level</h1>
+                <p>Learning Italian is a wonderful experience! Start with basic greetings like Ciao (Hello) and Grazie (Thank you). Practice daily conversations to improve fluency. Listening to Italian music or watching movies can help you catch the rhythm of the language. Consistency is the key to becoming confident in Italian!</p>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <!-- Greetings Section -->
+        <div class="section">
+            <h2>Greetings</h2>
+            <div class="phrases">
+                <div class="phrase">
+                    <p><span>Ciao</span> - Hello</p>
+                    <button onclick="playAudio('ciao.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Buongiorno</span> - Good day</p>
+                    <button onclick="playAudio('buongiorno.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Buonasera</span> - Good evening</p>
+                    <button onclick="playAudio('buonasera.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Arrivederci</span> - Goodbye</p>
+                    <button onclick="playAudio('arrivederci.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>A presto</span> - See you soon</p>
+                    <button onclick="playAudio('a_presto.mp3')">⏵</button>
+                </div>
+            </div>
+        </div>
+    
+        <div class="section">
+            <h2>Basic Sentences</h2>
+            <div class="phrases">
+                <div class="phrase">
+                    <p><span>Mi chiamo...</span> - My name is...</p>
+                    <button onclick="playAudio('mi_chiamo.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Vengo da...</span> - I come from...</p>
+                    <button onclick="playAudio('vengo_da.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Parlo un po' d'italiano.</span> - I speak a little Italian.</p>
+                    <button onclick="playAudio('parlo_un_po_d_italiano.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Che ore sono?</span> - What time is it?</p>
+                    <button onclick="playAudio('che_ore_sono.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Può aiutarmi?</span> - Can you help me?</p>
+                    <button onclick="playAudio('puo_aiutarmi.mp3')">⏵</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Common Phrases Section -->
+        <div class="section">
+            <h2>Common Phrases</h2>
+            <div class="phrases">
+                <div class="phrase">
+                    <p><span>Come stai?</span> - How are you?</p>
+                    <button onclick="playAudio('come_stai.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Grazie</span> - Thank you</p>
+                    <button onclick="playAudio('grazie.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Scusa</span> - Excuse me</p>
+                    <button onclick="playAudio('scusa.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Per favore</span> - Please</p>
+                    <button onclick="playAudio('per_favore.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Non capisco</span> - I don't understand</p>
+                    <button onclick="playAudio('non_capisco.mp3')">⏵</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="quiz">
+        <button><a href="/italian_quiz">Take Quiz</a></button>
+    </div>
+    <script>
+        // Function to play audio files
+        function playAudio(filename) {
+            const audio = new Audio(`static/${filename}`);
+            audio.play().catch(error => {
+                console.error(`Error playing the file ${filename}:`, error);
+                alert("Audio could not be played. Please check the file path or browser permissions.");
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Learn German A1</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='german.css') }}">
+    
+</head>
+<body>
+    <section class="header">
+        <div >
+            <nav>
+                <img src="static/logo.png" alt="">
+                <ul>
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/about">ABOUT</a></li>
+                    <li class="dropdown">
+                        <a href="/languages">LANGUAGES ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/german">German</a></li>
+                            <li><a href="/spanish">Spanish</a></li>
+                            <li><a href="/italian">Italian</a></li>
+                            <li><a href="/french">French</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contact">CONTACT</a></li>
+                </ul>
+                <button><a href="/logout">LOGOUT</a></button>
+            </nav>
+        </div>
+        <div class="intro">
+            <div class="intro-left">
+                <img src="static/germ.png" alt="German Culture">
+            </div>
+            <div class="intro-right">
+                <h1><span style="color: #F5BD05;">🇩🇪</span> Learn German - A1 Level</h1>
+                <p>Learn fast the most frequently used words and phrases. Focus more on your listening comprehension with the help of our professionally recorded human pronunciations. Be able to greet people, introduce yourself, tell your foreign acquaintances where you are from, etc.</p>
+            </div>
+        </div>
+    </section>
+    <section class="content">
+        <!-- Greetings Section -->
+        <div class="section">
+            <h2>Greetings</h2>
+            <div class="phrases">
+                <div class="phrase">
+                    <p><span>Hallo</span> - Hello</p>
+                    <button onclick="playAudio('hallo.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Guten Tag</span> - Good day</p>
+                    <button onclick="playAudio('guten_tag.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Guten Abend</span> - Good evening</p>
+                    <button onclick="playAudio('guten_abend.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Auf Wiedersehen</span> - Goodbye</p>
+                    <button onclick="playAudio('auf_wiedersehen.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Bis bald</span> - See you soon</p>
+                    <button onclick="playAudio('bis_bald.mp3')">⏵</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Basic Sentences</h2>
+            <div class="phrases">
+                <div class="phrase">
+                    <p><span>Ich heiße...</span> - My name is...</p>
+                    <button onclick="playAudio('ich_heisse.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Ich komme aus...</span> - I come from...</p>
+                    <button onclick="playAudio('ich_komme_aus.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Ich spreche ein bisschen Deutsch.</span> - I speak a little German.</p>
+                    <button onclick="playAudio('ich_spreche_ein_bisschen_deutsch.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Wie spät ist es?</span> - What time is it?</p>
+                    <button onclick="playAudio('wie_spaet_ist_es.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Können Sie mir helfen?</span> - Can you help me?</p>
+                    <button onclick="playAudio('koennen_sie_mir_helfen.mp3')">⏵</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Common Phrases Section -->
+        <div class="section">
+            <h2>Common Phrases</h2>
+            <div class="phrases">
+                <div class="phrase">
+                    <p><span>Wie geht's?</span> - How are you?</p>
+                    <button onclick="playAudio('wie_gehts.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Danke</span> - Thank you</p>
+                    <button onclick="playAudio('danke.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Entschuldigung</span> - Excuse me</p>
+                    <button onclick="playAudio('entschuldigung.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Bitte</span> - Please</p>
+                    <button onclick="playAudio('bitte.mp3')">⏵</button>
+                </div>
+                <div class="phrase">
+                    <p><span>Ich verstehe nicht</span> - I don't understand</p>
+                    <button onclick="playAudio('ich_verstehe_nicht.mp3')">⏵</button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div class="quiz">
+        <button><a href="/german_quiz">Take Quiz</a></button>
+    </div>
+    
+    <script>
+        // Function to play audio files
+        function playAudio(filename) {
+            const audio = new Audio(`static/${filename}`);
+            audio.play().catch(error => {
+                console.error(`Error playing the file ${filename}:`, error);
+                alert("Audio could not be played. Please check the file path or browser permissions.");
+            });
+        }
+    </script>
+</body>
+</html>

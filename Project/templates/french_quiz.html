@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>French Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='german_quiz.css') }}">
+</head>
+<body>
+    <section>
+        <div class="header">
+            <nav>
+                <img src="{{ url_for('static', filename='logo.png') }}" alt="">
+                <ul>
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/about">ABOUT</a></li>
+                    <li class="dropdown">
+                        <a href="/languages">LANGUAGES ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/german">German</a></li>
+                            <li><a href="/spanish">Spanish</a></li>
+                            <li><a href="/italian">Italian</a></li>
+                            <li><a href="/french">French</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contact">CONTACT</a></li>
+                </ul>
+                {% if 'user_id' in session %}
+                <button><a href="/logout">LOGOUT</a></button>
+                {% else %}
+                <button><a href="/login">LOGIN / SIGN UP</a></button>
+                {% endif %}
+            </nav>
+        </div>
+        <div class="quiz-container">
+            <h1>French Language Quiz</h1>
+            <form method="POST" action="{{ url_for('french_quiz') }}">
+                {{ form.hidden_tag() }} 
+            
+                <div class="question">
+                    <p>{{ question3['question3'] }}</p>
+                    {% for value, label in form.answer.choices %}
+                        <div>
+                            <input type="radio" name="answer" value="{{ value }}" {% if form.answer.data == value %}checked{% endif %} required>
+                            <label>{{ label }}</label>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button type="submit">Submit Answer</button>
+            </form>        
+            {% if result %}
+                <p>{{ result }}</p>
+            {% endif %}
+            <a href="{{ url_for('home') }}">Back to Home</a>
+        </div>
+    </section>
+</body>
+</html>

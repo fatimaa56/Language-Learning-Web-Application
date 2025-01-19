@@ -1,0 +1,213 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.header {
+    height: 100vh;
+    background-image: url('../static/bg4.png');
+    background-position: center;
+    background-size: cover;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+nav {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+}
+nav img {
+    width: 100px;
+    height: 100px;
+}
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 80px;
+}
+
+nav ul li {
+    position: relative;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 10px 20px;
+}
+nav ul li a:hover{
+    background-color: #f5bd05;
+}
+
+/* Vertical Line Separator */
+nav ul li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: 10%;
+    height: 70%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Dropdown Menu Styling */
+nav ul li .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;  /* Directly below the parent */
+    left: 0;
+    background-color: rgb(61, 60, 60);
+    list-style: none;
+    min-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 10px 0;
+}
+
+nav ul li .dropdown-menu li::after {
+    content: none; /* Disable the vertical line inside the dropdown */
+}
+
+nav ul li .dropdown-menu li {
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+nav ul li .dropdown-menu li:last-child {
+    border-bottom: none;
+}
+
+/* Show Dropdown on Hover */
+nav ul li:hover .dropdown-menu {
+    display: block;
+}
+
+/* Hover Effect */
+nav ul li .dropdown-menu a:hover {
+    background-color:  #f5bd05;
+}
+nav button {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f5bd05;
+}
+nav button a {
+    text-decoration: none;
+    color: white;
+    font-weight: 800;
+}
+
+.hero-section {
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    padding: 0px 85px;
+}
+
+.text-content {
+    flex: 1;
+    padding-right: 50px;
+}
+
+.text-content h1 {
+    font-size: 3rem;
+    color: #f5bd05;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.text-content p {
+    font-size: 1.3rem;
+    color: white;
+    line-height: 1.8;
+    max-width: 600px;
+    text-shadow: 1px 1px 6px rgba(0, 0, 0, 0.2);
+}
+
+.image-content img {
+    max-width: 500px;
+    height: auto;
+
+}
+.language-cards-section {
+    background-color: white;
+    padding: 40px 0;
+}
+
+.language-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+.language-card {
+    background: linear-gradient(to left, #97ABD5, #EED5F7);
+    padding: 20px;
+    width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    height: 210px;
+    color: white; /* Set text color to white */
+}
+
+.language-card h2 {
+    margin: 0 0 10px;
+    font-size: 1.5em; /* Larger font size for better readability */
+    color: #ffffff;
+}
+
+.language-card p {
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background-color: #F5BD05;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.btn:hover {
+    background-color: #F5BD05;
+}
+
+/* Styling for hr and h2 */
+.styled-hr {
+    border: none;
+    border-top: 3px solid #f5bd05;
+    width: 30%;
+    margin: 20px auto;
+}
+
+.styled-h2 {
+    font-size: 2em;
+    font-weight: bold;
+    color: #333;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    text-align:center ;
+}
+.language-card p {
+    font-size: 16px;
+    line-height: 1.6;
+}

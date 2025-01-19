@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='german_quiz.css') }}">
+</head>
+<body>
+    <section>
+        <div class="quiz-container">
+            <h1>Quiz Results</h1>
+            <p>Your score: {{ score }} out of {{ total }}</p>
+            <ul>
+                {% for answer in answers %}
+                    <li>
+                        <strong>{{ answer.question }}</strong><br>
+                        Your answer: {{ answer.user_answer }}<br>
+                        Correct answer: {{ answer.correct_answer }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <a href="{{ url_for('home') }}">Back to Home</a>
+        </div>
+    </section>
+</body>
+</html>

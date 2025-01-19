@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='contact.css') }}">
+</head>
+<body>
+    <section>
+        <!-- Header Section -->
+        <div class="header">
+            <nav>
+                <a href="/"><img src="{{ url_for('static', filename='logo.png') }}" alt="Logo"></a>
+                <ul>
+                    <li><a href="/">HOME</a></li>
+                    <li><a href="/about">ABOUT</a></li>
+                    <li class="dropdown">
+                        <a href="/languages">LANGUAGES ▼</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/german">German</a></li>
+                            <li><a href="/spanish">Spanish</a></li>
+                            <li><a href="/italian">Italian</a></li>
+                            <li><a href="/french">French</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/contact">CONTACT</a></li>
+                </ul>
+                {% if 'user_id' in session %}
+                <button><a href="/logout">LOGOUT</a></button>
+                {% else %}
+                <button><a href="/login">LOGIN / SIGN UP</a></button>
+                {% endif %}
+            </nav>
+        </div>
+
+        <!-- Contact Form Section -->
+        <div class="contact">
+            <div class="contact_left">
+                <img src="{{ url_for('static', filename='contact.png') }}" alt="Contact Image">
+            </div>
+            <div class="contact_right">
+                <form action="/contact" method="POST">
+                    {{ form.hidden_tag() }}
+                    <h1>Contact Us</h1>
+                    <p>Connect with us!</p>
+                    <div class="form-group name-fields">
+                        {{ form.first_name(class="form-control", placeholder="First Name") }}
+                        {{ form.last_name(class="form-control", placeholder="Last Name") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.email(class="form-control", placeholder="Email") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.message(class="form-control", placeholder="Message") }}
+                    </div>
+                    <button type="submit" class="btn btn-dark">Send{{ form.submit.text }}</button>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
