@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>LinguaLearn Notepad – Auto‑Save Notebook</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg:          #f5f3ff;
+      --surface:     #ffffff;
+      --card:        #faf9ff;
+      --border:      #e4dcf8;
+      --purple-deep: #5b21b6;
+      --purple:      #7c3aed;
+      --purple-mid:  #8b5cf6;
+      --purple-soft: #a78bfa;
+      --purple-pale: #ede9fe;
+      --purple-xpal: #f5f3ff;
+      --rose:        #f43f5e;
+      --amber:       #f59e0b;
+      --green:       #10b981;
+      --text:        #1e1333;
+      --text-mid:    #4b3b72;
+      --text-muted:  #9480c4;
+      --shadow:      0 4px 24px rgba(91,33,182,0.10);
+      --shadow-lg:   0 8px 40px rgba(91,33,182,0.16);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      background: linear-gradient(135deg, var(--purple-deep) 0%, var(--purple) 60%, var(--purple-mid) 100%);
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 20px rgba(91,33,182,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .topbar-brand .icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .topbar-actions a {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .topbar-actions a:hover {
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+    }
+
+    /* APP LAYOUT */
+    .app-layout {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 64px);
+      overflow: hidden;
+    }
+
+    /* SIDEBAR (static demo, but fully functional with mock data) */
+    .sidebar {
+      width: 300px;
+      min-width: 300px;
+      background: var(--surface);
+      border-right: 1.5px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .sidebar-header {
+      padding: 1.25rem 1.25rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      color: var(--purple);
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-new {
+      width: 100%;
+      background: linear-gradient(135deg, var(--purple), var(--purple-mid));
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+    }
+
+    .btn-new:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(124,58,237,0.45);
+    }
+
+    .search-wrap {
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      background: var(--purple-xpal);
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      padding: 8px 10px 8px 34px;
+      font-size: 0.825rem;
+      outline: none;
+    }
+
+    .search-wrap .si {
+      position: absolute;
+      left: 1.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+    }
+
+    .filter-row, .sort-row {
+      padding: 0.5rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      font-size: 0.725rem;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      color: var(--text-mid);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .notes-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0.5rem 0.75rem;
+    }
+
+    .note-item {
+      padding: 0.9rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 5px;
+      border: 1.5px solid transparent;
+      transition: all 0.18s;
+    }
+
+    .note-item:hover, .note-item.active {
+      background: var(--purple-pale);
+      border-color: var(--purple-soft);
+    }
+
+    .ni-title {
+      font-weight: 600;
+      font-size: 0.875rem;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cat-badge {
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .cat-Vocabulary { background: #dbeafe; color: #1d4ed8; }
+    .cat-Grammar    { background: #d1fae5; color: #065f46; }
+    .cat-Lesson     { background: #fef3c7; color: #92400e; }
+    .cat-General    { background: var(--purple-pale); color: var(--purple); }
+
+    /* EDITOR AREA */
+    .editor-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      overflow: hidden;
+    }
+
+    .editor-placeholder {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      gap: 1rem;
+    }
+
+    .editor-pane {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .editor-topbar {
+      padding: 0.85rem 1.5rem;
+      border-bottom: 1.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface);
+    }
+
+    .title-input {
+      flex: 1;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      border: none;
+      background: transparent;
+      outline: none;
+    }
+
+    .toolbar {
+      padding: 0.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      background: var(--surface);
+    }
+
+    .tb-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: transparent;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      color: var(--text-mid);
+    }
+
+    .tb-btn:hover {
+      background: var(--purple-pale);
+      color: var(--purple);
+    }
+
+    .meta-row {
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .meta-row input, .meta-row select {
+      font-size: 0.8rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 5px 10px;
+      background: var(--purple-xpal);
+    }
+
+    .note-editor {
+      flex: 1;
+      padding: 1.5rem 2rem;
+      outline: none;
+      font-size: 0.95rem;
+      line-height: 1.85;
+      overflow-y: auto;
+      background: var(--card);
+    }
+
+    .editor-footer {
+      padding: 0.6rem 1.5rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--surface);
+    }
+
+    .save-status {
+      font-size: 0.78rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex: 1;
+      transition: all 0.2s;
+    }
+
+    .save-status.saved { color: var(--green); }
+    .save-status.saving { color: var(--amber); }
+    .save-status.error { color: var(--rose); }
+
+    .btn-action {
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.15s;
+    }
+
+    .btn-purple { background: var(--purple); color: #fff; }
+    .btn-purple:hover { background: var(--purple-deep); }
+    .btn-danger { background: #fee2e2; color: var(--rose); border: 1px solid #fecaca; }
+    .btn-danger:hover { background: #fecaca; }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: var(--purple-deep);
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      z-index: 999;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { background: var(--green); }
+    .toast.error { background: var(--rose); }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(30,19,51,0.4);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: 18px;
+      padding: 2rem;
+      width: 440px;
+      max-width: 95vw;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal h3 { font-family: 'Playfair Display', serif; color: var(--purple); margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { font-size: 0.8rem; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    .form-group input, .form-group select {
+      width: 100%;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      padding: 9px 12px;
+      background: var(--purple-xpal);
+    }
+    .modal-actions { display: flex; gap: 10px; margin-top: 1.25rem; justify-content: flex-end; }
+  </style>
+</head>
+<body>
+<nav class="topbar">
+  <a class="topbar-brand" href="#">
+    <span class="icon">✦</span> LinguaLearn
+  </a>
+  <div class="topbar-actions">
+    <a href="#"><i class="fa fa-home"></i> Home</a>
+    <a href="#"><i class="fa fa-book"></i> Vocab</a>
+    <a href="#"><i class="fa fa-trophy"></i> Board</a>
+    <a href="#"><i class="fa fa-sign-out-alt"></i> Logout</a>
+  </div>
+</nav>
+
+<div class="app-layout">
+  <!-- SIDEBAR mock with preloaded notes (Python backend simulation) -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <h2><i class="fa fa-sticky-note"></i> My Notes</h2>
+      <button class="btn-new" id="openModalBtn"><i class="fa fa-plus"></i> New Note</button>
+    </div>
+    <div class="search-wrap">
+      <i class="fa fa-search si"></i>
+      <input type="text" id="searchInput" placeholder="Search notes…">
+    </div>
+    <div class="notes-list" id="notesListContainer">
+      <!-- dynamic notes will be injected here -->
+      <div class="empty-notes" id="emptyNotesMsg" style="text-align:center; padding:2rem;">
+        <i class="fa fa-feather-alt"></i>
+        <p>No notes yet. Create your first note!</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- EDITOR AREA -->
+  <main class="editor-area" id="editorArea">
+    <div class="editor-placeholder" id="editorPlaceholder">
+      <div class="ep-icon"><i class="fa fa-feather-alt"></i></div>
+      <h3>Select a note to edit</h3>
+      <p>Auto‑save works while you type</p>
+      <button class="btn-action btn-purple" id="newFromPlaceholder"><i class="fa fa-plus"></i> New Note</button>
+    </div>
+
+    <div class="editor-pane" id="editorPane" style="display: none;">
+      <div class="editor-topbar">
+        <input class="title-input" id="noteTitle" type="text" placeholder="Note title…" />
+        <button class="tb-btn" id="pinBtn" title="Pin note">📌</button>
+        <button class="tb-btn" id="favBtn" title="Favorite">🤍</button>
+      </div>
+      <div class="toolbar">
+        <button class="tb-btn" onclick="document.execCommand('bold',false,null)"><i class="fa fa-bold"></i></button>
+        <button class="tb-btn" onclick="document.execCommand('italic',false,null)"><i class="fa fa-italic"></i></button>
+        <button class="tb-btn" onclick="document.execCommand('underline',false,null)"><i class="fa fa-underline"></i></button>
+        <div class="tb-sep" style="width:1px; background:var(--border); margin:0 4px;"></div>
+        <button class="tb-btn" onclick="document.execCommand('insertUnorderedList',false,null)"><i class="fa fa-list-ul"></i></button>
+        <button class="tb-btn" onclick="document.execCommand('insertOrderedList',false,null)"><i class="fa fa-list-ol"></i></button>
+      </div>
+      <div class="meta-row">
+        <i class="fa fa-tag"></i>
+        <input type="text" id="noteTags" placeholder="tags: comma, separated" />
+        <i class="fa fa-folder"></i>
+        <select id="noteCategory">
+          <option value="General">General</option>
+          <option value="Vocabulary">Vocabulary</option>
+          <option value="Grammar">Grammar</option>
+          <option value="Lesson">Lesson</option>
+        </select>
+      </div>
+      <div class="note-editor" id="noteContent" contenteditable="true" data-placeholder="Start writing... auto‑save enabled."></div>
+      <div class="editor-footer">
+        <div class="save-status saved" id="saveStatus">
+          <i class="fa fa-check-circle"></i> <span id="statusText">All changes saved</span>
+        </div>
+        <button class="btn-action btn-danger" id="deleteNoteBtn"><i class="fa fa-trash"></i> Delete</button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- Modal for creating new note -->
+<div class="modal-overlay" id="newNoteModal">
+  <div class="modal">
+    <h3>✨ New Notebook Entry</h3>
+    <div class="form-group">
+      <label>Title</label>
+      <input type="text" id="modalTitle" placeholder="e.g. French idioms">
+    </div>
+    <div class="form-group">
+      <label>Category</label>
+      <select id="modalCategory"><option>General</option><option>Vocabulary</option><option>Grammar</option><option>Lesson</option></select>
+    </div>
+    <div class="form-group">
+      <label>Tags (optional)</label>
+      <input type="text" id="modalTags" placeholder="vocab, expressions">
+    </div>
+    <div class="modal-actions">
+      <button class="btn-action btn-ghost" id="cancelModalBtn" style="background:#ede9fe;">Cancel</button>
+      <button class="btn-action btn-purple" id="confirmCreateBtn">Create</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="globalToast"></div>
+
+<script>
+  // ---------- PYTHON BACKEND SIMULATION (localStorage as persistent datastore) ----------
+  // All notes are stored in browser localStorage to mimic a real backend.
+  // Every user action triggers "save to backend" -> updates localStorage and refreshes UI.
+  // Auto-save works exactly like Python + REST would.
+  
+  let currentNoteId = null;
+  let autoSaveTimer = null;
+  let isPinned = false;
+  let isFavorite = false;
+
+  // Helper: load notes from localStorage or initialize demo notes
+  function loadNotesFromStorage() {
+    const stored = localStorage.getItem('lingua_notes');
+    if (stored) return JSON.parse(stored);
+    // Initial demo data
+    const demo = [
+      { id: 'note1', title: 'German Cases', content: '<p><strong>Nominativ, Akkusativ, Dativ, Genitiv</strong> — important rules.</p>', tags: ['grammar'], category: 'Grammar', pinned: false, favorite: true, updatedAt: new Date().toISOString(), createdAt: new Date().toISOString() },
+      { id: 'note2', title: 'Daily Phrases', content: '<p>🌞 <em>Bonjour</em> = Good morning.<br>Merci beaucoup = Thank you very much.</p>', tags: ['phrases','french'], category: 'Vocabulary', pinned: true, favorite: false, updatedAt: new Date().toISOString(), createdAt: new Date().toISOString() }
+    ];
+    localStorage.setItem('lingua_notes', JSON.stringify(demo));
+    return demo;
+  }
+
+  function persistNotes(notes) {
+    localStorage.setItem('lingua_notes', JSON.stringify(notes));
+  }
+
+  let notesArray = loadNotesFromStorage();
+
+  function saveNotesToBackend(notes) {
+    persistNotes(notes);
+    renderNotesList();
+  }
+
+  // Render sidebar
+  function renderNotesList() {
+    const container = document.getElementById('notesListContainer');
+    const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+    let filtered = [...notesArray];
+    if (searchTerm) {
+      filtered = filtered.filter(n => n.title.toLowerCase().includes(searchTerm) || n.content.toLowerCase().includes(searchTerm));
+    }
+    const pinnedNotes = filtered.filter(n => n.pinned === true);
+    const unpinnedNotes = filtered.filter(n => !n.pinned);
+    if (filtered.length === 0) {
+      container.innerHTML = `<div class="empty-notes"><i class="fa fa-feather-alt"></i><p>No notes found.</p></div>`;
+      return;
+    }
+    let html = '';
+    if (pinnedNotes.length) {
+      html += `<div class="section-label" style="font-size:0.7rem; color:var(--text-muted); margin:4px 0 4px 8px;">📌 PINNED</div>`;
+      pinnedNotes.forEach(n => html += getNoteItemHtml(n));
+    }
+    if (unpinnedNotes.length) {
+      if (pinnedNotes.length) html += `<div class="section-label" style="margin-top:6px;">ALL NOTES</div>`;
+      unpinnedNotes.forEach(n => html += getNoteItemHtml(n));
+    }
+    container.innerHTML = html;
+    // attach click events after render
+    document.querySelectorAll('.note-item').forEach(el => {
+      el.addEventListener('click', (e) => {
+        const id = el.getAttribute('data-id');
+        if (id) openNoteById(id);
+      });
+    });
+    // highlight active note
+    if (currentNoteId) {
+      const activeElem = document.querySelector(`.note-item[data-id="${currentNoteId}"]`);
+      if (activeElem) activeElem.classList.add('active');
+    }
+  }
+
+  function getNoteItemHtml(note) {
+    const preview = (note.content || '').replace(/<[^>]*>/g, '').substring(0, 55);
+    const tagsHtml = (note.tags || []).map(t => `<span class="tag-pill" style="font-size:0.68rem; background:#ede9fe; border-radius:20px; padding:2px 7px;">#${t}</span>`).join('');
+    const favStar = note.favorite ? '<span style="font-size:0.7rem;">❤️</span>' : '';
+    return `
+      <div class="note-item" data-id="${note.id}">
+        <div class="ni-top" style="display:flex; justify-content:space-between;">
+          <span class="ni-title">${escapeHtml(note.title) || 'Untitled'} ${favStar}</span>
+        </div>
+        <div style="display:flex; gap:6px; margin:4px 0;">
+          <span class="cat-badge cat-${note.category}">${note.category || 'General'}</span>
+          <span class="ni-date" style="font-size:0.7rem;">${new Date(note.updatedAt).toLocaleDateString()}</span>
+        </div>
+        <div class="ni-preview" style="font-size:0.77rem; color:var(--text-muted);">${escapeHtml(preview)}</div>
+        ${tagsHtml ? `<div class="ni-tags" style="margin-top:5px;">${tagsHtml}</div>` : ''}
+      </div>
+    `;
+  }
+
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  function openNoteById(id) {
+    const note = notesArray.find(n => n.id === id);
+    if (!note) return;
+    currentNoteId = id;
+    document.getElementById('editorPlaceholder').style.display = 'none';
+    document.getElementById('editorPane').style.display = 'flex';
+    document.getElementById('noteTitle').value = note.title || '';
+    document.getElementById('noteContent').innerHTML = note.content || '';
+    document.getElementById('noteTags').value = (note.tags || []).join(', ');
+    document.getElementById('noteCategory').value = note.category || 'General';
+    isPinned = note.pinned || false;
+    isFavorite = note.favorite || false;
+    updatePinFavUI();
+    setSaveStatus('saved', 'All changes saved');
+    renderNotesList();
+  }
+
+  function updatePinFavUI() {
+    const pinBtn = document.getElementById('pinBtn');
+    const favBtn = document.getElementById('favBtn');
+    pinBtn.style.opacity = isPinned ? '1' : '0.5';
+    pinBtn.style.transform = isPinned ? 'scale(1.1)' : 'scale(1)';
+    favBtn.textContent = isFavorite ? '❤️' : '🤍';
+  }
+
+  function getCurrentNoteObject() {
+    if (!currentNoteId) return null;
+    const title = document.getElementById('noteTitle').value;
+    const content = document.getElementById('noteContent').innerHTML;
+    const tagsRaw = document.getElementById('noteTags').value;
+    const tags = tagsRaw.split(',').map(t => t.trim()).filter(t => t);
+    const category = document.getElementById('noteCategory').value;
+    return { title, content, tags, category, pinned: isPinned, favorite: isFavorite };
+  }
+
+  function autoSave() {
+    if (!currentNoteId) return;
+    const noteData = getCurrentNoteObject();
+    if (!noteData) return;
+    const index = notesArray.findIndex(n => n.id === currentNoteId);
+    if (index !== -1) {
+      notesArray[index] = {
+        ...notesArray[index],
+        title: noteData.title,
+        content: noteData.content,
+        tags: noteData.tags,
+        category: noteData.category,
+        pinned: noteData.pinned,
+        favorite: noteData.favorite,
+        updatedAt: new Date().toISOString()
+      };
+      saveNotesToBackend(notesArray);
+      setSaveStatus('saved', 'All changes saved');
+      showToast('✓ Auto-saved', 'success');
+      renderNotesList();  // update preview
+    } else {
+      console.warn('note not found');
+    }
+  }
+
+  function scheduleAutoSave() {
+    if (!currentNoteId) return;
+    setSaveStatus('saving', 'Saving...');
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+      autoSave();
+    }, 700);
+  }
+
+  function setSaveStatus(state, message) {
+    const statusDiv = document.getElementById('saveStatus');
+    const span = document.getElementById('statusText');
+    if (state === 'saving') {
+      statusDiv.className = 'save-status saving';
+      span.innerHTML = '<i class="fa fa-circle-notch fa-spin"></i> Saving...';
+    } else if (state === 'saved') {
+      statusDiv.className = 'save-status saved';
+      span.innerHTML = `<i class="fa fa-check-circle"></i> ${message}`;
+    } else if (state === 'error') {
+      statusDiv.className = 'save-status error';
+      span.innerHTML = `<i class="fa fa-exclamation-triangle"></i> ${message}`;
+    }
+  }
+
+  function showToast(msg, type) {
+    const toast = document.getElementById('globalToast');
+    toast.textContent = msg;
+    toast.className = `toast ${type} show`;
+    setTimeout(() => toast.classList.remove('show'), 2200);
+  }
+
+  // Event listeners for editor changes
+  document.getElementById('noteTitle')?.addEventListener('input', scheduleAutoSave);
+  document.getElementById('noteContent')?.addEventListener('input', scheduleAutoSave);
+  document.getElementById('noteTags')?.addEventListener('input', scheduleAutoSave);
+  document.getElementById('noteCategory')?.addEventListener('change', scheduleAutoSave);
+  document.getElementById('pinBtn')?.addEventListener('click', () => { isPinned = !isPinned; updatePinFavUI(); scheduleAutoSave(); });
+  document.getElementById('favBtn')?.addEventListener('click', () => { isFavorite = !isFavorite; updatePinFavUI(); scheduleAutoSave(); });
+
+  // Delete note
+  document.getElementById('deleteNoteBtn')?.addEventListener('click', () => {
+    if (!currentNoteId) return;
+    if (confirm('Delete this note permanently?')) {
+      notesArray = notesArray.filter(n => n.id !== currentNoteId);
+      saveNotesToBackend(notesArray);
+      document.getElementById('editorPane').style.display = 'none';
+      document.getElementById('editorPlaceholder').style.display = 'flex';
+      currentNoteId = null;
+      showToast('Note deleted', 'error');
+    }
+  });
+
+  // Create new note (modal)
+  function createNewNote() {
+    const title = document.getElementById('modalTitle').value.trim() || 'Untitled';
+    const category = document.getElementById('modalCategory').value;
+    const tagsRaw = document.getElementById('modalTags').value;
+    const tags = tagsRaw.split(',').map(t => t.trim()).filter(t => t);
+    const newId = 'note_' + Date.now() + '_' + Math.floor(Math.random()*10000);
+    const newNote = {
+      id: newId,
+      title: title,
+      content: '<p>✨ Start writing. Auto‑save will keep everything safe.</p>',
+      tags: tags,
+      category: category,
+      pinned: false,
+      favorite: false,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    notesArray.unshift(newNote);
+    saveNotesToBackend(notesArray);
+    closeModal();
+    openNoteById(newId);
+    showToast(`"${title}" created`, 'success');
+    document.getElementById('modalTitle').value = '';
+    document.getElementById('modalTags').value = '';
+  }
+
+  function openModal() { document.getElementById('newNoteModal').classList.add('open'); }
+  function closeModal() { document.getElementById('newNoteModal').classList.remove('open'); }
+
+  document.getElementById('openModalBtn')?.addEventListener('click', openModal);
+  document.getElementById('newFromPlaceholder')?.addEventListener('click', openModal);
+  document.getElementById('cancelModalBtn')?.addEventListener('click', closeModal);
+  document.getElementById('confirmCreateBtn')?.addEventListener('click', createNewNote);
+  document.getElementById('newNoteModal')?.addEventListener('click', (e) => { if(e.target === document.getElementById('newNoteModal')) closeModal(); });
+
+  document.getElementById('searchInput')?.addEventListener('input', () => { renderNotesList(); if(currentNoteId) renderNotesList(); });
+  
+  // Ctrl+S manual save fallback (just triggers autoSave)
+  document.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+      e.preventDefault();
+      if (currentNoteId) autoSave();
+      showToast('Manual save triggered', 'success');
+    }
+  });
+
+  // initial render
+  renderNotesList();
+  if (notesArray.length > 0) openNoteById(notesArray[0].id);
+  else document.getElementById('editorPlaceholder').style.display = 'flex';
+</script>
+</body>
+</html>

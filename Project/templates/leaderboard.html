@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard — LinguaSphere</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    /* ═══ RESET ═══ */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body {
+        font-family:'Poppins',sans-serif;
+        min-height:100vh;
+        background-image:url("{{ url_for('static',filename='bg4.png') }}");
+        background-size:cover; background-position:center; background-attachment:fixed;
+        overflow-x:hidden;
+    }
+
+    /* ═══ NAVBAR ═══ */
+    .navbar {
+        position:sticky; top:0; z-index:1000; width:100%;
+        background:rgba(10,10,30,0.55);
+        backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+        border-bottom:1px solid rgba(245,189,5,0.15);
+        box-shadow:0 4px 30px rgba(0,0,0,0.25);
+    }
+    .nav-container {
+        max-width:1280px; margin:0 auto; padding:0 40px;
+        height:72px; display:flex; align-items:center;
+        justify-content:space-between; gap:32px;
+    }
+    .logo-link { text-decoration:none; flex-shrink:0; }
+    .logo { display:flex; align-items:center; gap:10px; }
+    .logo-icon-wrap {
+        width:42px; height:42px; background:rgba(245,189,5,0.12); border-radius:10px;
+        display:flex; align-items:center; justify-content:center;
+        border:1px solid rgba(245,189,5,0.3); box-shadow:0 0 14px rgba(245,189,5,0.2);
+        transition:box-shadow 0.3s;
+    }
+    .logo-link:hover .logo-icon-wrap { box-shadow:0 0 22px rgba(245,189,5,0.4); }
+    .logo-icon { width:30px; height:30px; }
+    .logo-text { display:flex; align-items:baseline; line-height:1; }
+    .logo-main { font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:#fff; }
+    .logo-accent { font-family:'Playfair Display',serif; font-size:1.55rem; font-weight:700; color:#f5bd05; }
+
+    .nav-links > ul { display:flex; list-style:none; align-items:center; gap:4px; }
+    .nav-links > ul > li { position:relative; }
+    .nav-links > ul > li > a {
+        display:block; color:rgba(255,255,255,0.85); text-decoration:none;
+        font-weight:500; font-size:0.9rem; letter-spacing:0.4px;
+        padding:8px 16px; border-radius:8px; transition:all 0.25s; white-space:nowrap;
+    }
+    .nav-links > ul > li > a:hover,
+    .nav-links > ul > li > a.active { color:#f5bd05; background:rgba(245,189,5,0.1); }
+    .nav-links > ul > li > a.active { font-weight:600; }
+    .arrow { font-size:0.7rem; margin-left:3px; opacity:0.7; }
+
+    .dropdown-menu {
+        display:none; position:absolute; top:calc(100% + 8px); left:0;
+        flex-direction:column;
+        background:rgba(15,15,35,0.95); backdrop-filter:blur(20px);
+        list-style:none; min-width:190px; border-radius:12px;
+        box-shadow:0 8px 32px rgba(0,0,0,0.35);
+        border:1px solid rgba(245,189,5,0.15); padding:8px; z-index:9999;
+    }
+    .dropdown:hover .dropdown-menu { display:flex; flex-direction:column; animation:fadeDown 0.2s ease; }
+    @keyframes fadeDown {
+        from { opacity:0; transform:translateY(-6px); }
+        to   { opacity:1; transform:translateY(0); }
+    }
+    .dropdown-menu li a {
+        display:block; border-radius:8px; font-size:0.88rem; padding:9px 14px;
+        color:rgba(255,255,255,0.85); text-decoration:none; font-weight:500;
+        background:transparent; transition:all 0.2s;
+    }
+    .dropdown-menu li a:hover { background:rgba(245,189,5,0.12); color:#f5bd05; padding-left:18px; }
+
+    .nav-auth { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .btn-auth {
+        text-decoration:none; font-size:0.88rem; font-weight:600;
+        padding:9px 22px; border-radius:50px; transition:all 0.3s; letter-spacing:0.3px;
+    }
+    .btn-login { color:rgba(255,255,255,0.88); border:1px solid rgba(255,255,255,0.25); background:transparent; }
+    .btn-login:hover { border-color:#f5bd05; color:#f5bd05; background:rgba(245,189,5,0.08); }
+    .btn-logout, .btn-register {
+        background:linear-gradient(135deg,#f5bd05 0%,#e8a800 100%);
+        color:#1a1200; border:none; box-shadow:0 4px 14px rgba(245,189,5,0.35);
+    }
+    .btn-logout:hover, .btn-register:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(245,189,5,0.5); }
+
+    /* ═══ PAGE ═══ */
+    .lb-page { max-width:1100px; margin:0 auto; padding:48px 40px 64px; }
+
+    /* Hero */
+    .lb-hero {
+        text-align:center; margin-bottom:40px;
+    }
+    .lb-hero-badge {
+        display:inline-block; background:rgba(200,140,0,0.12);
+        border:1.5px solid rgba(200,140,0,0.4); color:#b8720a;
+        font-size:0.75rem; font-weight:700; letter-spacing:2px;
+        text-transform:uppercase; padding:5px 16px; border-radius:50px; margin-bottom:16px;
+    }
+    .lb-hero h1 {
+        font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:800;
+        color:#1a0e3a; margin-bottom:8px;
+    }
+    .lb-hero p { font-size:0.97rem; color:#4a3880; font-weight:400; }
+
+    /* Stats row */
+    .stats-row {
+        display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:36px;
+    }
+    .stat-card {
+        background:rgba(255,255,255,0.72); backdrop-filter:blur(12px);
+        border:1.5px solid rgba(100,70,180,0.12); border-radius:16px;
+        padding:20px 18px; text-align:center;
+        box-shadow:0 4px 20px rgba(60,30,120,0.08); transition:all 0.3s;
+    }
+    .stat-card:hover { transform:translateY(-4px); border-color:rgba(200,140,0,0.3); box-shadow:0 10px 28px rgba(60,30,120,0.14); }
+    .stat-val { font-size:2rem; font-weight:800; color:#1a0e3a; line-height:1; margin-bottom:4px; }
+    .stat-lbl { font-size:0.72rem; color:#5c4898; font-weight:600; letter-spacing:1px; text-transform:uppercase; }
+
+    /* Section title */
+    .section-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+    .section-title { font-family:'Playfair Display',serif; font-size:1.4rem; font-weight:700; color:#1a0e3a; }
+    .section-sub { font-size:0.8rem; color:#7a68b8; font-weight:500; }
+
+    /* Table card */
+    .table-card {
+        background:rgba(255,255,255,0.78); backdrop-filter:blur(12px);
+        border:1.5px solid rgba(100,70,180,0.1); border-radius:20px;
+        overflow:hidden; box-shadow:0 6px 28px rgba(60,30,120,0.1); margin-bottom:32px;
+    }
+    .table-card table { width:100%; border-collapse:collapse; }
+    .table-card thead tr { background:rgba(100,70,180,0.06); }
+    .table-card th {
+        font-size:0.7rem; font-weight:700; text-transform:uppercase;
+        letter-spacing:0.08em; color:#7a68b8; padding:14px 20px; text-align:left;
+    }
+    .table-card th:last-child { text-align:right; }
+    .table-card tbody tr { border-top:1px solid rgba(100,70,180,0.08); transition:background 0.15s; }
+    .table-card tbody tr:hover { background:rgba(245,189,5,0.05); }
+    .table-card tbody tr.my-row { background:rgba(200,140,0,0.06); }
+    .table-card td { padding:13px 20px; vertical-align:middle; }
+
+    .rank-badge {
+        width:32px; height:32px; border-radius:50%;
+        display:inline-flex; align-items:center; justify-content:center;
+        font-weight:700; font-size:0.82rem;
+    }
+    .rank-1 { background:linear-gradient(135deg,#fef3c7,#fde68a); color:#92400e; box-shadow:0 2px 8px rgba(245,158,11,0.4); }
+    .rank-2 { background:linear-gradient(135deg,#f1f5f9,#e2e8f0); color:#475569; }
+    .rank-3 { background:linear-gradient(135deg,#fef3c7,#fed7aa); color:#9a3412; }
+    .rank-other { background:rgba(100,70,180,0.1); color:#5c4898; }
+
+    .user-cell { display:flex; align-items:center; gap:10px; }
+    .avatar {
+        width:34px; height:34px; border-radius:50%;
+        background:linear-gradient(135deg,#ede9fe,#ddd6fe);
+        display:flex; align-items:center; justify-content:center;
+        font-weight:700; font-size:0.85rem; color:#5b21b6; flex-shrink:0;
+    }
+    .uname { font-weight:600; font-size:0.9rem; color:#1a0e3a; }
+    .you-tag {
+        font-size:0.62rem; background:rgba(200,140,0,0.12);
+        color:#b8720a; padding:2px 7px; border-radius:20px; font-weight:700; margin-left:4px;
+    }
+
+    .score-wrap { display:flex; align-items:center; gap:10px; }
+    .score-bar { flex:1; height:5px; background:rgba(100,70,180,0.12); border-radius:3px; min-width:60px; overflow:hidden; }
+    .score-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#7c3aed,#a78bfa); }
+    .score-num { font-weight:700; color:#5b21b6; font-size:0.9rem; min-width:28px; }
+
+    .acc-pill { font-size:0.72rem; padding:3px 9px; border-radius:20px; font-weight:600; }
+    .acc-high { background:#d1fae5; color:#065f46; }
+    .acc-mid  { background:#fef3c7; color:#92400e; }
+    .acc-low  { background:#fee2e2; color:#991b1b; }
+
+    .empty-state { padding:3rem; text-align:center; color:#9480c4; }
+    .empty-state .ei { font-size:2.5rem; margin-bottom:12px; }
+
+    /* My stats per language */
+    .lang-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:32px; }
+    .lang-card {
+        background:rgba(255,255,255,0.72); backdrop-filter:blur(12px);
+        border:1.5px solid rgba(100,70,180,0.1); border-radius:16px;
+        padding:20px 22px; box-shadow:0 4px 18px rgba(60,30,120,0.08);
+        transition:all 0.3s;
+    }
+    .lang-card:hover { transform:translateY(-3px); border-color:rgba(200,140,0,0.3); }
+    .lang-card-head { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+    .lang-flag { font-size:1.6rem; }
+    .lang-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; color:#1a0e3a; }
+    .lang-stat-row { display:flex; justify-content:space-between; font-size:0.82rem; margin-bottom:8px; }
+    .lang-stat-key { color:#5c4898; font-weight:500; }
+    .lang-stat-val { color:#1a0e3a; font-weight:700; }
+    .lang-bar-wrap { margin-top:6px; }
+    .lang-bar { height:6px; background:rgba(100,70,180,0.12); border-radius:3px; overflow:hidden; }
+    .lang-bar-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#f5bd05,#e8a800); }
+
+    /* Action buttons */
+    .action-row { display:flex; gap:12px; margin-top:8px; }
+    .btn-primary {
+        display:inline-block; background:linear-gradient(135deg,#f5bd05,#e8a800);
+        color:#1a1200; text-decoration:none; font-weight:700; font-size:0.88rem;
+        padding:11px 24px; border-radius:50px; box-shadow:0 4px 14px rgba(245,189,5,0.35);
+        transition:all 0.3s;
+    }
+    .btn-primary:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(245,189,5,0.5); }
+    .btn-secondary-link {
+        display:inline-block; color:#5c4898; text-decoration:none; font-weight:600;
+        font-size:0.88rem; padding:11px 24px; border-radius:50px;
+        border:1.5px solid rgba(100,70,180,0.25); transition:all 0.3s;
+    }
+    .btn-secondary-link:hover { border-color:#c98c00; color:#c98c00; background:rgba(245,189,5,0.06); }
+
+    @media (max-width:860px) {
+        .lb-page { padding:32px 24px 48px; }
+        .stats-row { grid-template-columns:repeat(2,1fr); }
+        .lang-grid { grid-template-columns:1fr; }
+    }
+    @media (max-width:500px) {
+        .stats-row { grid-template-columns:1fr 1fr; }
+        .lb-hero h1 { font-size:2rem; }
+        .nav-container { padding:0 20px; }
+    }
+    </style>
+</head>
+<body>
+
+<!-- ═══ NAVBAR ═══ -->
+<header class="navbar">
+    <div class="nav-container">
+        <a href="/" class="logo-link">
+            <div class="logo">
+                <div class="logo-icon-wrap">
+                    <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <polygon points="22,5 42,15 22,25 2,15" fill="#f5bd05"/>
+                        <polygon points="22,7 40,15 22,23 4,15" fill="#ffd04d" opacity="0.3"/>
+                        <rect x="10" y="19" width="4" height="11" rx="2" fill="#f5bd05"/>
+                        <circle cx="36" cy="15" r="2.5" fill="#fff" opacity="0.9"/>
+                        <line x1="36" y1="17.5" x2="36" y2="26" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+                        <circle cx="36" cy="27" r="2" fill="#fff" opacity="0.85"/>
+                        <circle cx="22" cy="34" r="7" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.9"/>
+                        <ellipse cx="22" cy="34" rx="3.5" ry="7" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                        <line x1="15" y1="34" x2="29" y2="34" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                    </svg>
+                </div>
+                <span class="logo-text"><span class="logo-main">Lingua</span><span class="logo-accent">Sphere</span></span>
+            </div>
+        </a>
+        <nav class="nav-links">
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About Us</a></li>
+                <li class="dropdown">
+                    <a href="/languages" class="dropdown-toggle">Languages <span class="arrow">&#9662;</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/german">🇩🇪 German</a></li>
+                        <li><a href="/spanish">🇪🇸 Spanish</a></li>
+                        <li><a href="/italian">🇮🇹 Italian</a></li>
+                        <li><a href="/french">🇫🇷 French</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="/leaderboard" class="active dropdown-toggle">Leaderboard <span class="arrow">&#9662;</span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/notebook">📓 Notebook</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+        <div class="nav-auth">
+            {% if 'user_id' in session %}
+            <a href="/logout" class="btn-auth btn-logout">Logout</a>
+            {% else %}
+            <a href="/login" class="btn-auth btn-login">Login</a>
+            <a href="/register" class="btn-auth btn-register">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<!-- ═══ PAGE ═══ -->
+<div class="lb-page">
+
+    <!-- Hero -->
+    <div class="lb-hero">
+        <div class="lb-hero-badge">🏆 Rankings</div>
+        <h1>Leaderboard</h1>
+        <p>See how you rank among language learners on LinguaSphere</p>
+    </div>
+
+    <!-- My Stats Row -->
+    {% set total_correct  = my_stats | sum(attribute='correct')  if my_stats else 0 %}
+    {% set total_attempts = my_stats | sum(attribute='attempts') if my_stats else 0 %}
+    {% set accuracy = ((total_correct / total_attempts * 100) | round(1)) if total_attempts > 0 else 0 %}
+
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-val">{{ total_correct }}</div>
+            <div class="stat-lbl">Correct Answers</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val">{{ total_attempts }}</div>
+            <div class="stat-lbl">Total Attempts</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val">{{ accuracy }}%</div>
+            <div class="stat-lbl">Accuracy</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-val">{% if my_rank %}#{{ my_rank }}{% else %}—{% endif %}</div>
+            <div class="stat-lbl">Global Rank</div>
+        </div>
+    </div>
+
+    <!-- Global Top 10 -->
+    <div class="section-head">
+        <span class="section-title">🌍 Global Top 10</span>
+        <span class="section-sub">All-time highest scorers</span>
+    </div>
+
+    <div class="table-card">
+        {% if top_users %}
+        {% set max_score = top_users[0]['total_correct'] if top_users[0]['total_correct'] > 0 else 1 %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Learner</th>
+                    <th>Score</th>
+                    <th>Attempts</th>
+                    <th style="text-align:right;">Accuracy</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in top_users %}
+            <tr class="{% if user['_id'] == session.get('username') %}my-row{% endif %}">
+                <td>
+                    <span class="rank-badge {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% else %}rank-other{% endif %}">
+                        {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+                    </span>
+                </td>
+                <td>
+                    <div class="user-cell">
+                        <div class="avatar">{{ user['_id'][0]|upper }}</div>
+                        <span class="uname">{{ user['_id'] }}</span>
+                        {% if user['_id'] == session.get('username') %}<span class="you-tag">You</span>{% endif %}
+                    </div>
+                </td>
+                <td>
+                    <div class="score-wrap">
+                        <div class="score-bar">
+                            <div class="score-fill" style="width:{{ [((user['total_correct'] / max_score * 100)|round)|int, 4]|max }}%"></div>
+                        </div>
+                        <span class="score-num">{{ user['total_correct'] }}</span>
+                    </div>
+                </td>
+                <td style="color:#7a68b8;font-size:0.875rem;">{{ user['total_attempts'] }}</td>
+                <td style="text-align:right;">
+                    {% set acc = ((user['total_correct'] / user['total_attempts'] * 100)|round(1)) if user['total_attempts'] > 0 else 0 %}
+                    <span class="acc-pill {% if acc >= 70 %}acc-high{% elif acc >= 40 %}acc-mid{% else %}acc-low{% endif %}">{{ acc }}%</span>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="empty-state">
+            <div class="ei">🏆</div>
+            <p>No quiz scores yet. Take a quiz to appear here!</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- My Performance by Language -->
+    {% if my_stats %}
+    <div class="section-head">
+        <span class="section-title">📊 My Performance — {{ session['username']|capitalize }}</span>
+        <span class="section-sub">Per language breakdown</span>
+    </div>
+    <div class="lang-grid">
+        {% set lang_flags = {'German':'🇩🇪','Spanish':'🇪🇸','Italian':'🇮🇹','French':'🇫🇷'} %}
+        {% set max_lang = (my_stats | map(attribute='correct') | max) if my_stats else 1 %}
+        {% for stat in my_stats %}
+        <div class="lang-card">
+            <div class="lang-card-head">
+                <span class="lang-flag">{{ lang_flags.get(stat['_id'], '🌐') }}</span>
+                <span class="lang-name">{{ stat['_id'] }}</span>
+            </div>
+            <div class="lang-stat-row">
+                <span class="lang-stat-key">Correct</span>
+                <span class="lang-stat-val">{{ stat['correct'] }}</span>
+            </div>
+            <div class="lang-stat-row">
+                <span class="lang-stat-key">Attempts</span>
+                <span class="lang-stat-val">{{ stat['attempts'] }}</span>
+            </div>
+            <div class="lang-stat-row">
+                <span class="lang-stat-key">Accuracy</span>
+                <span class="lang-stat-val">
+                    {% set acc = ((stat['correct'] / stat['attempts'] * 100)|round(1)) if stat['attempts'] > 0 else 0 %}
+                    <span class="acc-pill {% if acc >= 70 %}acc-high{% elif acc >= 40 %}acc-mid{% else %}acc-low{% endif %}">{{ acc }}%</span>
+                </span>
+            </div>
+            <div class="lang-bar-wrap">
+                <div class="lang-bar">
+                    <div class="lang-bar-fill" style="width:{{ [((stat['correct'] / max_lang * 100)|round)|int, 4]|max if max_lang > 0 else 4 }}%"></div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Action buttons -->
+    <div class="action-row">
+        <a href="/languages" class="btn-primary">Take a Quiz →</a>
+        <a href="/notebook" class="btn-secondary-link">📓 My Notebook</a>
+    </div>
+
+</div>
+</body>
+</html>

@@ -3,77 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Languages</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for ('static',filename='languages.css') }}">
+    <title>Languages — LinguaSphere</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='languages.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <section class="header">
-        <div>
-            <nav>
-                <img src="static/logo.png" alt="Logo">
+
+    <!-- ═══ NAVBAR ═══ -->
+    <header class="navbar">
+        <div class="nav-container">
+
+            <a href="/" class="logo-link">
+                <div class="logo">
+                    <div class="logo-icon-wrap">
+                        <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="22,5 42,15 22,25 2,15" fill="#f5bd05"/>
+                            <polygon points="22,7 40,15 22,23 4,15" fill="#ffd04d" opacity="0.3"/>
+                            <rect x="10" y="19" width="4" height="11" rx="2" fill="#f5bd05"/>
+                            <circle cx="36" cy="15" r="2.5" fill="#fff" opacity="0.9"/>
+                            <line x1="36" y1="17.5" x2="36" y2="26" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+                            <circle cx="36" cy="27" r="2" fill="#fff" opacity="0.85"/>
+                            <circle cx="22" cy="34" r="7" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.9"/>
+                            <ellipse cx="22" cy="34" rx="3.5" ry="7" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                            <line x1="15" y1="34" x2="29" y2="34" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text">
+                        <span class="logo-main">Lingua</span><span class="logo-accent">Sphere</span>
+                    </span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
                 <ul>
-                    <li><a href="/">HOME</a></li>
-                    <li><a href="/about">ABOUT</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
                     <li class="dropdown">
-                        <a href="/languages">LANGUAGES ▼</a>
+                        <a href="/languages" class="active dropdown-toggle">Languages <span class="arrow">&#9662;</span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/german">German</a></li>
-                            <li><a href="/spanish">Spanish</a></li>
-                            <li><a href="/italian">Italian</a></li>
-                            <li><a href="/french">French</a></li>
+                            <li><a href="/german">🇩🇪 German</a></li>
+                            <li><a href="/spanish">🇪🇸 Spanish</a></li>
+                            <li><a href="/italian">🇮🇹 Italian</a></li>
+                            <li><a href="/french">🇫🇷 French</a></li>
                         </ul>
                     </li>
-                    <li><a href="/contact">CONTACT</a></li>
+                    <li class="dropdown">
+                        <a href="/leaderboard" class="dropdown-toggle">Leaderboard <span class="arrow">&#9662;</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/notebook">📓 Notebook</a></li>
+                        </ul>
+                    </li>
                 </ul>
-                {% if 'user_id' in session %}
-                <button><a href="/logout">LOGOUT</a></button>
-                {% else %}
-                <button><a href="/login">LOGIN / SIGN UP</a></button>
-                {% endif %}
             </nav>
-        </div>
-        <div class="hero-section">
-            <div class="image-content">
-                <img src="static/language.png" alt="Language Journey">
+
+            <div class="nav-auth">
+                {% if 'user_id' in session %}
+                <a href="/logout" class="btn-auth btn-logout">Logout</a>
+                {% else %}
+                <a href="/login" class="btn-auth btn-login">Login</a>
+                <a href="/register" class="btn-auth btn-register">Sign Up</a>
+                {% endif %}
             </div>
-            <div class="text-content">
-                <h1>Embark on a Journey of Words</h1>
-                <p>Unlock the beauty of languages and dive into new cultures. Every word you learn is a step closer to understanding the world in a new way.  
-                From the bustling markets of Spain to the serene countryside of France, language is the bridge that connects hearts and minds.  
-                Let curiosity guide you, and let’s make learning more than just a task—make it an unforgettable adventure full of discovery and growth.</p>
+
+        </div>
+    </header>
+
+    <!-- ═══ HERO BANNER ═══ -->
+    <section class="lang-hero">
+        <div class="lang-hero-container">
+            <div class="lang-hero-text">
+                <span class="lang-badge">Our Languages</span>
+                <h1 class="lang-hero-title">
+                    Embark on a<br>
+                    <span class="lang-highlight">Journey of Words</span>
+                </h1>
+                <p class="lang-hero-sub">
+                    Unlock the beauty of languages and dive into new cultures. Every word you learn is a step closer to understanding the world in a whole new way. Choose your language and start today.
+                </p>
+                <div class="lang-stats">
+                    <div class="stat-item">
+                        <strong>4</strong>
+                        <span>Languages</span>
+                    </div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item">
+                        <strong>290+</strong>
+                        <span>Lessons</span>
+                    </div>
+                    <div class="stat-div"></div>
+                    <div class="stat-item">
+                        <strong>15K+</strong>
+                        <span>Learners</span>
+                    </div>
+                </div>
+            </div>
+            <div class="lang-hero-img">
+                <div class="hero-img-glow"></div>
+                <img src="{{ url_for('static', filename='language.png') }}" alt="Language Journey">
             </div>
         </div>
     </section>
 
-    <section class="language-cards-section">
-        <hr class="styled-hr">
-        <h2 class="styled-h2">Languages We Offer</h2>
-        <hr class="styled-hr">
-        <div class="language-grid">
-            <div class="language-card">
-                <h2>🇩🇪 German</h2>
-                <p>Master the German language with interactive lessons covering vocabulary, grammar, and cultural insights. From basic greetings to advanced conversations, our German course has you covered.</p>
-                <a href="/german" class="btn">Start Learning</a>
+    <!-- ═══ LANGUAGE CARDS ═══ -->
+    <section class="courses-section">
+        <div class="courses-container">
+
+            <div class="courses-header">
+                <span class="section-badge">Available Courses</span>
+                <h2 class="section-title">Languages We Offer</h2>
+                <p class="section-sub">Pick a language and start your immersive journey — interactive lessons, audio guides, and quizzes await you.</p>
             </div>
 
-            <div class="language-card">
-                <h2>🇪🇸 Spanish</h2>
-                <p>Learn one of the world’s most spoken languages. Our Spanish course focuses on practical phrases, sentence structure, and pronunciation, helping you communicate confidently in various situations.</p>
-                <a href="/spanish" class="btn">Start Learning</a>
-            </div>
+            <div class="cards-grid">
 
-            <div class="language-card">
-                <h2>🇮🇹 Italian</h2>
-                <p>Learn Italian and immerse yourself in its rich history and culture. Our course covers conversational skills, grammar, vocabulary, and more to help you master the language.</p>
-                <a href="/italian" class="btn">Start Learning</a>
-            </div>
+                <!-- German -->
+                <div class="lang-card">
+                    <div class="card-img-wrap card-de">
+                        <img src="{{ url_for('static', filename='germ.png') }}" alt="German">
+                        <div class="card-flag">🇩🇪</div>
+                        <div class="card-level">Beginner → Advanced</div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">German</h3>
+                        <p class="card-desc">Master German with interactive lessons covering vocabulary, grammar, and cultural insights. From basic greetings to advanced conversations.</p>
+                        <div class="card-meta">
+                            <span class="meta-tag">🎧 Audio</span>
+                            <span class="meta-tag">🧠 Quiz</span>
+                            <span class="meta-tag">📖 Lessons</span>
+                        </div>
+                        <a href="/german" class="card-btn">Start Learning →</a>
+                    </div>
+                </div>
 
-            <div class="language-card">
-                <h2>🇫🇷 French</h2>
-                <p>From ordering a croissant to discussing world events, our French course guides you step by step. Develop listening, reading, and speaking skills while immersing yourself in French culture.</p>
-                <a href="/french" class="btn">Start Learning</a>
+                <!-- Spanish -->
+                <div class="lang-card">
+                    <div class="card-img-wrap card-es">
+                        <img src="{{ url_for('static', filename='spanish.png') }}" alt="Spanish">
+                        <div class="card-flag">🇪🇸</div>
+                        <div class="card-level">Beginner → Advanced</div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Spanish</h3>
+                        <p class="card-desc">Learn one of the world's most spoken languages. Practical phrases, sentence structure, and pronunciation to help you communicate confidently.</p>
+                        <div class="card-meta">
+                            <span class="meta-tag">🎧 Audio</span>
+                            <span class="meta-tag">🧠 Quiz</span>
+                            <span class="meta-tag">📖 Lessons</span>
+                        </div>
+                        <a href="/spanish" class="card-btn">Start Learning →</a>
+                    </div>
+                </div>
+
+                <!-- Italian -->
+                <div class="lang-card">
+                    <div class="card-img-wrap card-it">
+                        <img src="{{ url_for('static', filename='italy.png') }}" alt="Italian">
+                        <div class="card-flag">🇮🇹</div>
+                        <div class="card-level">Beginner → Advanced</div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">Italian</h3>
+                        <p class="card-desc">Immerse yourself in Italy's rich culture and language. Conversational skills, grammar, and vocabulary to help you speak like a local.</p>
+                        <div class="card-meta">
+                            <span class="meta-tag">🎧 Audio</span>
+                            <span class="meta-tag">🧠 Quiz</span>
+                            <span class="meta-tag">📖 Lessons</span>
+                        </div>
+                        <a href="/italian" class="card-btn">Start Learning →</a>
+                    </div>
+                </div>
+
+                <!-- French -->
+                <div class="lang-card">
+                    <div class="card-img-wrap card-fr">
+                        <img src="{{ url_for('static', filename='french.png') }}" alt="French">
+                        <div class="card-flag">🇫🇷</div>
+                        <div class="card-level">Beginner → Advanced</div>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">French</h3>
+                        <p class="card-desc">From ordering a croissant to discussing world events, our French course guides you step by step through listening, reading, and speaking skills.</p>
+                        <div class="card-meta">
+                            <span class="meta-tag">🎧 Audio</span>
+                            <span class="meta-tag">🧠 Quiz</span>
+                            <span class="meta-tag">📖 Lessons</span>
+                        </div>
+                        <a href="/french" class="card-btn">Start Learning →</a>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
+
 </body>
 </html>

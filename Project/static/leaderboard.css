@@ -1,0 +1,197 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background-image: url('../static/bg4.png');
+    background-position: center;
+    background-size: cover;
+}
+
+nav {
+    align-items: center;
+    display: flex;
+    justify-content: space-around;
+}
+nav img {
+    width: 100px;
+    height: 100px;
+}
+nav ul {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    gap: 80px;
+}
+nav ul li {
+    position: relative;
+}
+nav ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 15px;
+    padding: 10px 20px;
+}
+nav ul li a:hover {
+    background-color: #f5bd05;
+}
+nav ul li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: -40px;
+    top: 10%;
+    height: 70%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+nav ul li .dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: rgb(61, 60, 60);
+    list-style: none;
+    min-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    padding: 10px 0;
+}
+nav ul li .dropdown-menu li::after { content: none; }
+nav ul li .dropdown-menu li {
+    padding: 10px 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+nav ul li .dropdown-menu li:last-child { border-bottom: none; }
+nav ul li:hover .dropdown-menu { display: block; }
+nav ul li .dropdown-menu a:hover { background-color: #f5bd05; }
+nav button {
+    padding: 15px;
+    border-radius: 10px;
+    border: none;
+    background-color: #f5bd05;
+}
+nav button a {
+    text-decoration: none;
+    color: white;
+    font-weight: 800;
+}
+
+/* ─── Leaderboard Layout ─── */
+.leaderboard-wrapper {
+    padding: 20px 60px 50px;
+}
+
+.lb-banner {
+    text-align: center;
+    padding: 30px 0 20px;
+    color: white;
+}
+.lb-banner h1 {
+    font-size: 2.8rem;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+    letter-spacing: 2px;
+}
+.lb-banner p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-top: 8px;
+}
+
+.lb-content {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.lb-card {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    padding: 30px;
+    min-width: 420px;
+    flex: 1;
+    max-width: 600px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.lb-card h2 {
+    font-size: 1.5rem;
+    color: #3d3c3c;
+    margin-bottom: 20px;
+    border-bottom: 3px solid #f5bd05;
+    padding-bottom: 10px;
+}
+
+.lb-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.lb-table thead tr {
+    background-color: #f5bd05;
+    color: white;
+}
+.lb-table th, .lb-table td {
+    padding: 12px 15px;
+    text-align: center;
+    font-size: 14px;
+}
+.lb-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+.lb-table tbody tr:hover {
+    background-color: #fff3cc;
+    transition: background 0.2s;
+}
+.my-row {
+    background-color: #fffbe6 !important;
+    font-weight: bold;
+    border-left: 4px solid #f5bd05;
+}
+
+.accuracy-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 13px;
+}
+.accuracy-badge.good { background: #d4edda; color: #155724; }
+.accuracy-badge.mid  { background: #fff3cd; color: #856404; }
+.accuracy-badge.low  { background: #f8d7da; color: #721c24; }
+
+.no-data {
+    text-align: center;
+    color: #888;
+    font-style: italic;
+    padding: 20px 0;
+}
+
+.action-btns {
+    display: flex;
+    gap: 15px;
+    margin-top: 25px;
+    justify-content: center;
+}
+.btn-play, .btn-notebook {
+    padding: 12px 25px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 15px;
+    transition: background 0.3s;
+}
+.btn-play {
+    background-color: #f5bd05;
+    color: white;
+}
+.btn-play:hover { background-color: #d4a204; }
+.btn-notebook {
+    background-color: #3d3c3c;
+    color: white;
+}
+.btn-notebook:hover { background-color: #5c5b5b; }

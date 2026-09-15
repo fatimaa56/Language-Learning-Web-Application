@@ -3,54 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for ('static',filename='about.css')}}">
+    <title>About Us — LinguaSphere</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='about.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <section>
-        <div class="header">
-            <nav>
-                <img src="static/logo.png" alt="">
+
+    <!-- ═══ NAVBAR (same as home) ═══ -->
+    <header class="navbar">
+        <div class="nav-container">
+
+            <a href="/" class="logo-link">
+                <div class="logo">
+                    <div class="logo-icon-wrap">
+                        <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="22,5 42,15 22,25 2,15" fill="#f5bd05"/>
+                            <polygon points="22,7 40,15 22,23 4,15" fill="#ffd04d" opacity="0.3"/>
+                            <rect x="10" y="19" width="4" height="11" rx="2" fill="#f5bd05"/>
+                            <circle cx="36" cy="15" r="2.5" fill="#fff" opacity="0.9"/>
+                            <line x1="36" y1="17.5" x2="36" y2="26" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+                            <circle cx="36" cy="27" r="2" fill="#fff" opacity="0.85"/>
+                            <circle cx="22" cy="34" r="7" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.9"/>
+                            <ellipse cx="22" cy="34" rx="3.5" ry="7" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                            <line x1="15" y1="34" x2="29" y2="34" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text">
+                        <span class="logo-main">Lingua</span><span class="logo-accent">Sphere</span>
+                    </span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
                 <ul>
-                    <li><a href="/">HOME</a></li>
-                    <li><a href="/about">ABOUT</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about" class="active">About Us</a></li>
                     <li class="dropdown">
-                        <a href="/languages">LANGUAGES ▼</a>
+                        <a href="/languages" class="dropdown-toggle">Languages <span class="arrow">&#9662;</span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/german">German</a></li>
-                            <li><a href="/spanish">Spanish</a></li>
-                            <li><a href="/italian">Italian</a></li>
-                            <li><a href="/french">French</a></li>
+                            <li><a href="/german">🇩🇪 German</a></li>
+                            <li><a href="/spanish">🇪🇸 Spanish</a></li>
+                            <li><a href="/italian">🇮🇹 Italian</a></li>
+                            <li><a href="/french">🇫🇷 French</a></li>
                         </ul>
                     </li>
-                    <li><a href="/contact">CONTACT</a></li>
+                    <li class="dropdown">
+                        <a href="/leaderboard" class="dropdown-toggle">Leaderboard <span class="arrow">&#9662;</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/notebook">📓 Notebook</a></li>
+                        </ul>
+                    </li>
                 </ul>
-                {% if 'user_id' in session %}
-                <button><a href="/logout">LOGOUT</a></button>
-                {% else %}
-                <button><a href="/login">LOGIN / SIGN UP</a></button>
-                {% endif %}
             </nav>
-        </div>
-        <div class="about">
-            <div class="">
-                <h1>About Us – Language Learning Focus</h1>
-                <p>Welcome to <span class="about-span">FLUENTO</span> , where language learning meets passion and innovation!</p>
-                <br>
-                <p>At <span class="about-span">FLUENTO</span> , we believe language is the bridge that connects cultures, fosters understanding, and opens doors to endless opportunities. Our mission is to empower learners of all levels to confidently communicate in the language of their choice, whether for personal growth, professional advancement, or cultural exploration.</p>
-                <br>
+
+            <div class="nav-auth">
+                {% if 'user_id' in session %}
+                <a href="/logout" class="btn-auth btn-logout">Logout</a>
+                {% else %}
+                <a href="/login" class="btn-auth btn-login">Login</a>
+                <a href="/register" class="btn-auth btn-register">Sign Up</a>
+                {% endif %}
             </div>
-            <div class="">
-                <h1>What We Offer</h1>
-                <p><span class="about-span">Comprehensive Courses:</span> Tailored lessons that cater to beginners, intermediates, and advanced learners.</p>
-                
-                <p><span class="about-span">Engaging Tools:</span> Interactive resources like audio lessons, quizzes, and more to make learning enjoyable and effective.</p>
-            
-                <p><span class="about-span">Flexible Learning:</span> Study at your own pace, anytime, anywhere, through our accessible online platform.</p>
-                <br>
-                <p>Join us on this exciting journey and unlock the power of language to transform your world.</p>
+
+        </div>
+    </header>
+
+    <!-- ═══ ABOUT HERO ═══ -->
+    <section class="about-hero">
+        <div class="about-container">
+
+            <!-- Left: Stacked image collage -->
+            <div class="about-visuals">
+                <div class="img-card img-card-1">
+                    <img src="{{ url_for('static', filename='french.png') }}" alt="French Learning">
+                </div>
+                <div class="img-card img-card-2">
+                    <img src="{{ url_for('static', filename='germ.png') }}" alt="German Learning">
+                </div>
+                <div class="img-card img-card-3">
+                    <img src="{{ url_for('static', filename='contact.png') }}" alt="Language Community">
+                </div>
+                <div class="deco-circle"></div>
+                <div class="deco-ring"></div>
+            </div>
+
+            <!-- Right: Content -->
+            <div class="about-content">
+                <span class="about-badge">About Us</span>
+                <h1 class="about-title">
+                    We Are a Fully Dedicated<br>
+                    <span class="about-highlight">Language Learning</span> Platform
+                </h1>
+                <p class="about-desc">
+                    At <strong>LinguaSphere</strong>, we believe language is the bridge that connects cultures, fosters understanding, and opens doors to endless opportunities. Our mission is to empower learners of all levels to confidently communicate in French, Spanish, German, and Italian.
+                </p>
+                <p class="about-desc">
+                    Whether you're a complete beginner or refining advanced skills, our interactive lessons, audio resources, and quizzes are designed to make your learning journey enjoyable, effective, and flexible.
+                </p>
+                <a href="/languages" class="about-cta-btn">Start Learning &rarr;</a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══ WHAT WE OFFER ═══ -->
+    <section class="offer-section">
+        <div class="offer-container">
+            <span class="section-badge">What We Offer</span>
+            <h2 class="section-title">Everything You Need to Master a Language</h2>
+
+            <div class="offer-grid">
+
+                <div class="offer-card">
+                    <div class="offer-icon">📚</div>
+                    <h3>Comprehensive Courses</h3>
+                    <p>Tailored lessons for beginners, intermediate, and advanced learners across four major European languages.</p>
+                </div>
+
+                <div class="offer-card">
+                    <div class="offer-icon">🎧</div>
+                    <h3>Audio Lessons</h3>
+                    <p>Native-quality pronunciation audio for every phrase, word, and lesson so you sound natural from day one.</p>
+                </div>
+
+                <div class="offer-card">
+                    <div class="offer-icon">🧠</div>
+                    <h3>Interactive Quizzes</h3>
+                    <p>Test your knowledge after every lesson with smart quizzes that reinforce vocabulary and grammar in context.</p>
+                </div>
+
+                <div class="offer-card">
+                    <div class="offer-icon">🌍</div>
+                    <h3>4 Languages Available</h3>
+                    <p>French, Spanish, German, and Italian — all in one place with a consistent, structured learning experience.</p>
+                </div>
+
             </div>
         </div>
     </section>
+
+    <!-- ═══ LANGUAGES STRIP ═══ -->
+    <section class="lang-strip">
+        <div class="lang-strip-container">
+            <a href="/french" class="lang-item">
+                <span>🇫🇷</span>
+                <p>French</p>
+            </a>
+            <div class="lang-divider"></div>
+            <a href="/spanish" class="lang-item">
+                <span>🇪🇸</span>
+                <p>Spanish</p>
+            </a>
+            <div class="lang-divider"></div>
+            <a href="/german" class="lang-item">
+                <span>🇩🇪</span>
+                <p>German</p>
+            </a>
+            <div class="lang-divider"></div>
+            <a href="/italian" class="lang-item">
+                <span>🇮🇹</span>
+                <p>Italian</p>
+            </a>
+        </div>
+    </section>
+
 </body>
 </html>

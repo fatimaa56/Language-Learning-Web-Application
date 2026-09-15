@@ -3,56 +3,111 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spanish Quiz</title>
+    <title>Spanish Quiz — LinguaSphere</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='german_quiz.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <section>
-        <div class="header">
-            <nav>
-                <img src="{{ url_for('static', filename='logo.png') }}" alt="">
+
+    <!-- ═══ NAVBAR ═══ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo-link">
+                <div class="logo">
+                    <div class="logo-icon-wrap">
+                        <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="22,5 42,15 22,25 2,15" fill="#f5bd05"/>
+                            <polygon points="22,7 40,15 22,23 4,15" fill="#ffd04d" opacity="0.3"/>
+                            <rect x="10" y="19" width="4" height="11" rx="2" fill="#f5bd05"/>
+                            <circle cx="36" cy="15" r="2.5" fill="#fff" opacity="0.9"/>
+                            <line x1="36" y1="17.5" x2="36" y2="26" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+                            <circle cx="36" cy="27" r="2" fill="#fff" opacity="0.85"/>
+                            <circle cx="22" cy="34" r="7" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.9"/>
+                            <ellipse cx="22" cy="34" rx="3.5" ry="7" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                            <line x1="15" y1="34" x2="29" y2="34" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text"><span class="logo-main">Lingua</span><span class="logo-accent">Sphere</span></span>
+                </div>
+            </a>
+            <nav class="nav-links">
                 <ul>
-                    <li><a href="/">HOME</a></li>
-                    <li><a href="/about">ABOUT</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
                     <li class="dropdown">
-                        <a href="/languages">LANGUAGES ▼</a>
+                        <a href="/languages" class="dropdown-toggle">Languages <span class="arrow">&#9662;</span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="/german">German</a></li>
-                            <li><a href="/spanish">Spanish</a></li>
-                            <li><a href="/italian">Italian</a></li>
-                            <li><a href="/french">French</a></li>
+                            <li><a href="/german">🇩🇪 German</a></li>
+                            <li><a href="/spanish">🇪🇸 Spanish</a></li>
+                            <li><a href="/italian">🇮🇹 Italian</a></li>
+                            <li><a href="/french">🇫🇷 French</a></li>
                         </ul>
                     </li>
-                    <li><a href="/contact">CONTACT</a></li>
+                    <li class="dropdown">
+                        <a href="/leaderboard" class="dropdown-toggle">Leaderboard <span class="arrow">&#9662;</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/notebook">📓 Notebook</a></li>
+                        </ul>
+                    </li>
                 </ul>
-                {% if 'user_id' in session %}
-                <button><a href="/logout">LOGOUT</a></button>
-                {% else %}
-                <button><a href="/login">LOGIN / SIGN UP</a></button>
-                {% endif %}
             </nav>
+            <div class="nav-auth">
+                {% if 'user_id' in session %}
+                <a href="/logout" class="btn-auth btn-logout">Logout</a>
+                {% else %}
+                <a href="/login" class="btn-auth btn-login">Login</a>
+                <a href="/register" class="btn-auth btn-register">Sign Up</a>
+                {% endif %}
+            </div>
         </div>
-        <div class="quiz-container">
-            <h1>Spanish Language Quiz</h1>
-            <form method="POST" action="{{ url_for('spanish_quiz') }}">
-                {{ form.hidden_tag() }} 
-            
-                <div class="question">
-                    <p>{{ question1['question1'] }}</p>
-                    {% for value, label in form.answer.choices %}
-                        <div>
-                            <input type="radio" name="answer" value="{{ value }}" {% if form.answer.data == value %}checked{% endif %} required>
-                            <label>{{ label }}</label>
-                        </div>
-                    {% endfor %}
+    </header>
+
+    <!-- ═══ QUIZ PAGE ═══ -->
+    <main class="quiz-page">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+
+        <div class="quiz-card">
+            <div class="quiz-card-top"></div>
+            <div class="quiz-card-body">
+
+                <div class="quiz-header">
+                    <div class="quiz-lang-badge">🇪🇸 Spanish Quiz</div>
+                    <h1 class="quiz-title">Test Your Spanish</h1>
+                    <p class="quiz-sub">Read the question carefully and select the best answer.</p>
                 </div>
-                <button type="submit">Submit Answer</button>
-            </form>        
-            {% if result %}
-                <p>{{ result }}</p>
-            {% endif %}
-            <a href="{{ url_for('home') }}">Back to Home</a>
+
+                <div class="quiz-divider"></div>
+
+                <form method="POST" action="{{ url_for('spanish_quiz') }}">
+                    {{ form.hidden_tag() }}
+
+                    <div class="question-label">Question</div>
+                    <p class="question-text">{{ question1['question1'] }}</p>
+
+                    <div class="options-list">
+                        {% for value, label in form.answer.choices %}
+                        <div class="option-item">
+                            <input type="radio" name="answer" id="opt_{{ loop.index }}"
+                                   value="{{ value }}"
+                                   {% if form.answer.data == value %}checked{% endif %}
+                                   required>
+                            <label for="opt_{{ loop.index }}">{{ label }}</label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="submit-btn">Submit Answer →</button>
+                </form>
+
+                {% if result %}
+                <div class="result-msg">{{ result }}</div>
+                {% endif %}
+
+                <a href="{{ url_for('home') }}" class="back-link">← Back to Home</a>
+            </div>
         </div>
-    </section>
+    </main>
+
 </body>
 </html>

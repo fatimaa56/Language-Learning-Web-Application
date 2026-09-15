@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Vocabulary Notebook — LinguaSphere</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='notebook.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    /* ═══ NAVBAR — matches home ═══ */
+    *, *::before, *::after { box-sizing: border-box; }
+    .navbar {
+        position: sticky; top: 0; z-index: 1000; width: 100%;
+        background: rgba(10,10,30,0.55);
+        backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+        border-bottom: 1px solid rgba(245,189,5,0.15);
+        box-shadow: 0 4px 30px rgba(0,0,0,0.25);
+    }
+    .nav-container {
+        max-width: 1280px; margin: 0 auto; padding: 0 40px;
+        height: 72px; display: flex; align-items: center;
+        justify-content: space-between; gap: 32px;
+    }
+    .logo-link { text-decoration: none; flex-shrink: 0; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon-wrap {
+        width: 42px; height: 42px; background: rgba(245,189,5,0.12);
+        border-radius: 10px; display: flex; align-items: center; justify-content: center;
+        border: 1px solid rgba(245,189,5,0.3); box-shadow: 0 0 14px rgba(245,189,5,0.2);
+        transition: box-shadow 0.3s;
+    }
+    .logo-link:hover .logo-icon-wrap { box-shadow: 0 0 22px rgba(245,189,5,0.4); }
+    .logo-icon { width: 30px; height: 30px; }
+    .logo-text { display: flex; align-items: baseline; line-height: 1; }
+    .logo-main  { font-family: 'Playfair Display', serif; font-size: 1.55rem; font-weight: 700; color: #fff; }
+    .logo-accent { font-family: 'Playfair Display', serif; font-size: 1.55rem; font-weight: 700; color: #f5bd05; }
+    .nav-links > ul { display: flex; list-style: none; align-items: center; gap: 4px; }
+    .nav-links > ul > li { position: relative; }
+    .nav-links > ul > li > a {
+        display: block; color: rgba(255,255,255,0.85); text-decoration: none;
+        font-weight: 500; font-size: 0.9rem; letter-spacing: 0.4px;
+        padding: 8px 16px; border-radius: 8px; transition: all 0.25s; white-space: nowrap;
+    }
+    .nav-links > ul > li > a:hover,
+    .nav-links > ul > li > a.active { color: #f5bd05; background: rgba(245,189,5,0.1); }
+    .nav-links > ul > li > a.active { font-weight: 600; }
+    .arrow { font-size: 0.7rem; margin-left: 3px; opacity: 0.7; }
+    .dropdown-menu {
+        display: none; position: absolute; top: calc(100% + 8px); left: 0;
+        flex-direction: column; background: rgba(15,15,35,0.95);
+        backdrop-filter: blur(20px); list-style: none; min-width: 190px;
+        border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+        border: 1px solid rgba(245,189,5,0.15); padding: 8px; z-index: 9999;
+    }
+    .dropdown:hover .dropdown-menu { display: flex; flex-direction: column; animation: fadeDown 0.2s ease; }
+    @keyframes fadeDown {
+        from { opacity: 0; transform: translateY(-6px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    .dropdown-menu li a {
+        display: block; border-radius: 8px; font-size: 0.88rem; padding: 9px 14px;
+        color: rgba(255,255,255,0.85); text-decoration: none;
+        font-weight: 500; background: transparent; transition: all 0.2s;
+    }
+    .dropdown-menu li a:hover { background: rgba(245,189,5,0.12); color: #f5bd05; padding-left: 18px; }
+    .nav-auth { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .btn-auth {
+        text-decoration: none; font-size: 0.88rem; font-weight: 600;
+        padding: 9px 22px; border-radius: 50px; transition: all 0.3s;
+    }
+    .btn-login  { color: rgba(255,255,255,0.88); border: 1px solid rgba(255,255,255,0.25); background: transparent; }
+    .btn-login:hover { border-color: #f5bd05; color: #f5bd05; background: rgba(245,189,5,0.08); }
+    .btn-logout, .btn-register {
+        background: linear-gradient(135deg,#f5bd05,#e8a800); color: #1a1200;
+        border: none; box-shadow: 0 4px 14px rgba(245,189,5,0.35);
+    }
+    .btn-logout:hover, .btn-register:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(245,189,5,0.5); }
+
+    /* ═══ ADD WORD BUTTON + MODAL ═══ */
+    .nb-header-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .btn-add-word {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, #7c3aed, #8b5cf6);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 18px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        box-shadow: 0 4px 14px rgba(124,58,237,0.35);
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn-add-word:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 20px rgba(124,58,237,0.45);
+    }
+
+    .aw-modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10,10,25,0.55);
+        backdrop-filter: blur(6px);
+        z-index: 2000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+    }
+    .aw-modal-overlay.open { display: flex; }
+    .aw-modal {
+        background: #ffffff;
+        border-radius: 18px;
+        padding: 2rem;
+        width: 420px;
+        max-width: 92vw;
+        box-shadow: 0 12px 50px rgba(0,0,0,0.35);
+        font-family: 'Poppins', sans-serif;
+    }
+    .aw-modal h3 {
+        font-family: 'Playfair Display', serif;
+        color: #7c3aed;
+        margin-bottom: 1.25rem;
+        font-size: 1.3rem;
+    }
+    .aw-form-group { margin-bottom: 1rem; }
+    .aw-form-group label {
+        font-size: 0.8rem;
+        color: #9480c4;
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    .aw-form-group input,
+    .aw-form-group select {
+        width: 100%;
+        border: 1.5px solid #e4dcf8;
+        border-radius: 9px;
+        padding: 10px 12px;
+        background: #f5f3ff;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        color: #1e1333;
+        outline: none;
+    }
+    .aw-form-group input:focus,
+    .aw-form-group select:focus {
+        border-color: #a78bfa;
+    }
+    .aw-modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 1.5rem;
+        justify-content: flex-end;
+    }
+    .aw-btn {
+        font-size: 0.85rem;
+        padding: 9px 20px;
+        border-radius: 9px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.15s;
+        font-family: 'Poppins', sans-serif;
+    }
+    .aw-btn-cancel { background: #ede9fe; color: #5b21b6; }
+    .aw-btn-cancel:hover { background: #e0d6fb; }
+    .aw-btn-save { background: #7c3aed; color: #fff; }
+    .aw-btn-save:hover { background: #5b21b6; }
+
+    .aw-toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        background: #1e1333;
+        color: #fff;
+        padding: 12px 22px;
+        border-radius: 12px;
+        font-family: 'Poppins', sans-serif;
+        font-size: 0.9rem;
+        font-weight: 500;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+        transform: translateY(90px);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        z-index: 2100;
+    }
+    .aw-toast.show { transform: translateY(0); opacity: 1; }
+    .aw-toast.success { background: #10b981; }
+    .aw-toast.error   { background: #f43f5e; }
+
+    @media (max-width: 640px) {
+        .nb-header { flex-wrap: wrap; gap: 12px; }
+        .nb-header-actions { width: 100%; }
+        .btn-add-word { flex: 1; justify-content: center; }
+    }
+    </style>
+</head>
+<body>
+    <!-- ═══ NAVBAR ═══ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo-link">
+                <div class="logo">
+                    <div class="logo-icon-wrap">
+                        <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="22,5 42,15 22,25 2,15" fill="#f5bd05"/>
+                            <polygon points="22,7 40,15 22,23 4,15" fill="#ffd04d" opacity="0.3"/>
+                            <rect x="10" y="19" width="4" height="11" rx="2" fill="#f5bd05"/>
+                            <circle cx="36" cy="15" r="2.5" fill="#fff" opacity="0.9"/>
+                            <line x1="36" y1="17.5" x2="36" y2="26" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+                            <circle cx="36" cy="27" r="2" fill="#fff" opacity="0.85"/>
+                            <circle cx="22" cy="34" r="7" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.9"/>
+                            <ellipse cx="22" cy="34" rx="3.5" ry="7" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                            <line x1="15" y1="34" x2="29" y2="34" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text"><span class="logo-main">Lingua</span><span class="logo-accent">Sphere</span></span>
+                </div>
+            </a>
+            <nav class="nav-links">
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li class="dropdown">
+                        <a href="/languages" class="dropdown-toggle">Languages <span class="arrow">&#9662;</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/german">🇩🇪 German</a></li>
+                            <li><a href="/spanish">🇪🇸 Spanish</a></li>
+                            <li><a href="/italian">🇮🇹 Italian</a></li>
+                            <li><a href="/french">🇫🇷 French</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="/leaderboard" class="dropdown-toggle">Leaderboard <span class="arrow">&#9662;</span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/notebook" class="active">📓 Notebook</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <div class="nav-auth">
+                {% if 'user_id' in session %}
+                <a href="/logout" class="btn-auth btn-logout">Logout</a>
+                {% else %}
+                <a href="/login" class="btn-auth btn-login">Login</a>
+                <a href="/register" class="btn-auth btn-register">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+        <div class="notebook-wrapper">
+
+            <!-- ── SIDEBAR ── -->
+            <aside class="nb-sidebar">
+                <div class="sidebar-user">
+                    <div class="user-avatar">
+                        {{ session['username'][0]|upper if 'username' in session else '?' }}
+                    </div>
+                    <p class="user-name">{{ session['username']|capitalize if 'username' in session else 'Learner' }}</p>
+                    <p class="user-sub">My Vocabulary Notebook</p>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <p class="sidebar-nav-label">Filter by Language</p>
+                    <button class="snav-btn active" onclick="filterWords('all', this)">
+                        <span class="snav-icon">📚</span> All Words
+                    </button>
+                    <button class="snav-btn" onclick="filterWords('German', this)">
+                        <span class="snav-icon">🇩🇪</span> German
+                    </button>
+                    <button class="snav-btn" onclick="filterWords('Spanish', this)">
+                        <span class="snav-icon">🇪🇸</span> Spanish
+                    </button>
+                    <button class="snav-btn" onclick="filterWords('Italian', this)">
+                        <span class="snav-icon">🇮🇹</span> Italian
+                    </button>
+                    <button class="snav-btn" onclick="filterWords('French', this)">
+                        <span class="snav-icon">🇫🇷</span> French
+                    </button>
+                </nav>
+
+                <div class="sidebar-footer">
+                    <a href="/languages" class="sb-link">🎓 Go to Lessons</a>
+                    <a href="/leaderboard" class="sb-link">🏆 Leaderboard</a>
+                </div>
+            </aside>
+
+            <!-- ── MAIN CONTENT ── -->
+            <main class="nb-main">
+
+                <!-- Header -->
+                <div class="nb-header">
+                    <div>
+                        <span class="nb-badge">📓 Notebook</span>
+                        <h1 class="nb-title">My Vocabulary</h1>
+                        <p class="nb-sub">Words you saved while learning languages</p>
+                    </div>
+                    <div class="nb-header-actions">
+                        <div class="nb-search-wrap">
+                            <span class="search-ico">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </span>
+                            <input type="text" id="searchInput" class="nb-search" placeholder="Search saved words…" oninput="searchWords(this.value)">
+                        </div>
+                        <button class="btn-add-word" id="openAddWordBtn">➕ Add Word</button>
+                    </div>
+                </div>
+
+                <!-- Flash messages -->
+                {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                <div class="nb-alert">
+                    {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+                </div>
+                {% endif %}
+                {% endwith %}
+
+                <!-- Words Grid -->
+                {% if words %}
+                <div class="words-grid" id="wordsGrid">
+                    {% for word in words %}
+                    <div class="word-card" data-language="{{ word['language'] }}" data-word="{{ word['word']|lower }}">
+
+                        <div class="wc-top">
+                            <span class="wc-lang-tag">
+                                {% if word['language'] == 'German' %}🇩🇪
+                                {% elif word['language'] == 'Spanish' %}🇪🇸
+                                {% elif word['language'] == 'Italian' %}🇮🇹
+                                {% elif word['language'] == 'French' %}🇫🇷
+                                {% endif %}
+                                {{ word['language'] }}
+                            </span>
+                            <button class="wc-delete" onclick="deleteWord('{{ word['word'] }}', this)" title="Remove">✕</button>
+                        </div>
+
+                        <h3 class="wc-word">{{ word['word'] }}</h3>
+                        <p class="wc-meaning">{{ word['meaning'] }}</p>
+
+                        <div class="wc-footer">
+                            <span class="wc-date">
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                {{ word['saved_at'] }}
+                            </span>
+                        </div>
+
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <p class="no-results" id="noResults" style="display:none;">No words match your search.</p>
+
+                {% else %}
+                <div class="nb-empty">
+                    <div class="empty-icon">📭</div>
+                    <h3>Your notebook is empty</h3>
+                    <p>Go to any language lesson and save phrases, or add your own words manually, to build your vocabulary collection here.</p>
+                    <a href="/languages" class="btn-explore">Explore Languages →</a>
+                </div>
+                {% endif %}
+
+            </main>
+        </div>
+
+    <!-- ═══ ADD WORD MODAL ═══ -->
+    <div class="aw-modal-overlay" id="addWordModal">
+        <div class="aw-modal">
+            <h3>➕ Add a New Word</h3>
+            <div class="aw-form-group">
+                <label>Word / Phrase</label>
+                <input type="text" id="awWord" placeholder="e.g. Bonjour">
+            </div>
+            <div class="aw-form-group">
+                <label>Meaning</label>
+                <input type="text" id="awMeaning" placeholder="e.g. Hello">
+            </div>
+            <div class="aw-form-group">
+                <label>Language</label>
+                <select id="awLanguage">
+                    <option value="German">🇩🇪 German</option>
+                    <option value="Spanish">🇪🇸 Spanish</option>
+                    <option value="Italian">🇮🇹 Italian</option>
+                    <option value="French">🇫🇷 French</option>
+                </select>
+            </div>
+            <div class="aw-modal-actions">
+                <button class="aw-btn aw-btn-cancel" id="cancelAddWordBtn">Cancel</button>
+                <button class="aw-btn aw-btn-save" id="confirmAddWordBtn">Save Word</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterWords(language, btn) {
+            // Update sidebar buttons
+            document.querySelectorAll('.snav-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            document.querySelectorAll('.word-card').forEach(card => {
+                card.style.display = (language === 'all' || card.dataset.language === language) ? 'flex' : 'none';
+            });
+            document.getElementById('searchInput').value = '';
+            document.getElementById('noResults') && (document.getElementById('noResults').style.display = 'none');
+        }
+
+        function searchWords(query) {
+            const q = query.toLowerCase().trim();
+            let visible = 0;
+            document.querySelectorAll('.word-card').forEach(card => {
+                const matches = card.dataset.word.includes(q) || card.querySelector('.wc-meaning').textContent.toLowerCase().includes(q);
+                card.style.display = matches ? 'flex' : 'none';
+                if (matches) visible++;
+            });
+            const nr = document.getElementById('noResults');
+            if (nr) nr.style.display = (q && visible === 0) ? 'block' : 'none';
+        }
+
+        function deleteWord(word, btn) {
+            if (!confirm('Remove "' + word + '" from your notebook?')) return;
+            fetch('/delete_word', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ word: word })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    btn.closest('.word-card').remove();
+                    const remaining = document.querySelectorAll('.word-card').length;
+                    if (remaining === 0) location.reload();
+                }
+            });
+        }
+
+        // ═══ ADD WORD MODAL ═══
+        const addWordModal = document.getElementById('addWordModal');
+
+        function openAddWordModal() {
+            document.getElementById('awWord').value = '';
+            document.getElementById('awMeaning').value = '';
+            addWordModal.classList.add('open');
+            document.getElementById('awWord').focus();
+        }
+        function closeAddWordModal() {
+            addWordModal.classList.remove('open');
+        }
+
+        document.getElementById('openAddWordBtn').addEventListener('click', openAddWordModal);
+        document.getElementById('cancelAddWordBtn').addEventListener('click', closeAddWordModal);
+        addWordModal.addEventListener('click', (e) => { if (e.target === addWordModal) closeAddWordModal(); });
+
+        function showAwToast(msg, type) {
+            let toast = document.getElementById('awToast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'awToast';
+                toast.className = 'aw-toast';
+                document.body.appendChild(toast);
+            }
+            toast.textContent = msg;
+            toast.className = 'aw-toast ' + type + ' show';
+            clearTimeout(window._awToastTimer);
+            window._awToastTimer = setTimeout(() => toast.classList.remove('show'), 2400);
+        }
+
+        document.getElementById('confirmAddWordBtn').addEventListener('click', () => {
+            const word = document.getElementById('awWord').value.trim();
+            const meaning = document.getElementById('awMeaning').value.trim();
+            const language = document.getElementById('awLanguage').value;
+
+            if (!word || !meaning) {
+                showAwToast('Please fill in both the word and its meaning.', 'error');
+                return;
+            }
+
+            fetch('/save_word', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ word: word, meaning: meaning, language: language })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    showAwToast(data.message, 'success');
+                    closeAddWordModal();
+                    setTimeout(() => location.reload(), 600);
+                } else {
+                    showAwToast(data.message, 'error');
+                }
+            })
+            .catch(() => showAwToast('Could not save word. Try again.', 'error'));
+        });
+
+        // Allow pressing Enter in the meaning field to submit
+        document.getElementById('awMeaning').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') document.getElementById('confirmAddWordBtn').click();
+        });
+    </script>
+</body>
+</html>

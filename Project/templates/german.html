@@ -3,135 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Learn German A1</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='german.css') }}">
-    
+    <title>Learn German — LinguaSphere</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='lang-shared.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* German flag play button */
+        .play-btn { background: linear-gradient(to bottom, #000 33.33%, #D00 33.33% 66.66%, #FFCE00 66.66%); }
+    </style>
 </head>
 <body>
-    <section class="header">
-        <div >
-            <nav>
-                <img src="static/logo.png" alt="">
+
+    <!-- ═══ NAVBAR ═══ -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="logo-link">
+                <div class="logo">
+                    <div class="logo-icon-wrap">
+                        <svg class="logo-icon" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <polygon points="22,5 42,15 22,25 2,15" fill="#f5bd05"/>
+                            <polygon points="22,7 40,15 22,23 4,15" fill="#ffd04d" opacity="0.3"/>
+                            <rect x="10" y="19" width="4" height="11" rx="2" fill="#f5bd05"/>
+                            <circle cx="36" cy="15" r="2.5" fill="#fff" opacity="0.9"/>
+                            <line x1="36" y1="17.5" x2="36" y2="26" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.85"/>
+                            <circle cx="36" cy="27" r="2" fill="#fff" opacity="0.85"/>
+                            <circle cx="22" cy="34" r="7" fill="none" stroke="#fff" stroke-width="1.6" opacity="0.9"/>
+                            <ellipse cx="22" cy="34" rx="3.5" ry="7" fill="none" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                            <line x1="15" y1="34" x2="29" y2="34" stroke="#fff" stroke-width="1.1" opacity="0.65"/>
+                        </svg>
+                    </div>
+                    <span class="logo-text"><span class="logo-main">Lingua</span><span class="logo-accent">Sphere</span></span>
+                </div>
+            </a>
+            <nav class="nav-links">
                 <ul>
-                    <li><a href="/">HOME</a></li>
-                    <li><a href="/about">ABOUT</a></li>
-                    <li class="dropdown">
-                        <a href="/languages">LANGUAGES ▼</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/german">German</a></li>
-                            <li><a href="/spanish">Spanish</a></li>
-                            <li><a href="/italian">Italian</a></li>
-                            <li><a href="/french">French</a></li>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/about">About Us</a></li>
+                    <li class="nav-dropdown">
+                        <a href="/languages" class="active dropdown-toggle">Languages <span class="arrow">&#9662;</span></a>
+                        <ul class="nav-dropdown-menu">
+                            <li><a href="/german">🇩🇪 German</a></li>
+                            <li><a href="/spanish">🇪🇸 Spanish</a></li>
+                            <li><a href="/italian">🇮🇹 Italian</a></li>
+                            <li><a href="/french">🇫🇷 French</a></li>
                         </ul>
                     </li>
-                    <li><a href="/contact">CONTACT</a></li>
+                    <li class="nav-dropdown">
+                        <a href="/leaderboard" class="dropdown-toggle">Leaderboard <span class="arrow">&#9662;</span></a>
+                        <ul class="nav-dropdown-menu">
+                            <li><a href="/notebook">📓 Notebook</a></li>
+                        </ul>
+                    </li>
                 </ul>
-                <button><a href="/logout">LOGOUT</a></button>
             </nav>
-        </div>
-        <div class="intro">
-            <div class="intro-left">
-                <img src="static/germ.png" alt="German Culture">
-            </div>
-            <div class="intro-right">
-                <h1><span style="color: #F5BD05;">🇩🇪</span> Learn German - A1 Level</h1>
-                <p>Learn fast the most frequently used words and phrases. Focus more on your listening comprehension with the help of our professionally recorded human pronunciations. Be able to greet people, introduce yourself, tell your foreign acquaintances where you are from, etc.</p>
-            </div>
-        </div>
-    </section>
-    <section class="content">
-        <!-- Greetings Section -->
-        <div class="section">
-            <h2>Greetings</h2>
-            <div class="phrases">
-                <div class="phrase">
-                    <p><span>Hallo</span> - Hello</p>
-                    <button onclick="playAudio('hallo.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Guten Tag</span> - Good day</p>
-                    <button onclick="playAudio('guten_tag.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Guten Abend</span> - Good evening</p>
-                    <button onclick="playAudio('guten_abend.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Auf Wiedersehen</span> - Goodbye</p>
-                    <button onclick="playAudio('auf_wiedersehen.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Bis bald</span> - See you soon</p>
-                    <button onclick="playAudio('bis_bald.mp3')">⏵</button>
-                </div>
+            <div class="nav-auth">
+                {% if 'user_id' in session %}
+                <a href="/logout" class="btn-auth btn-logout">Logout</a>
+                {% else %}
+                <a href="/login" class="btn-auth btn-login">Login</a>
+                <a href="/register" class="btn-auth btn-register">Sign Up</a>
+                {% endif %}
             </div>
         </div>
+    </header>
 
-        <div class="section">
-            <h2>Basic Sentences</h2>
-            <div class="phrases">
-                <div class="phrase">
-                    <p><span>Ich heiße...</span> - My name is...</p>
-                    <button onclick="playAudio('ich_heisse.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Ich komme aus...</span> - I come from...</p>
-                    <button onclick="playAudio('ich_komme_aus.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Ich spreche ein bisschen Deutsch.</span> - I speak a little German.</p>
-                    <button onclick="playAudio('ich_spreche_ein_bisschen_deutsch.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Wie spät ist es?</span> - What time is it?</p>
-                    <button onclick="playAudio('wie_spaet_ist_es.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Können Sie mir helfen?</span> - Can you help me?</p>
-                    <button onclick="playAudio('koennen_sie_mir_helfen.mp3')">⏵</button>
-                </div>
+    <!-- ═══ HERO INTRO ═══ -->
+    <section class="lang-intro">
+        <div class="lang-intro-container">
+            <div class="intro-img-wrap">
+                <div class="intro-img-glow"></div>
+                <img src="{{ url_for('static', filename='germ.png') }}" alt="German Learning">
             </div>
-        </div>
-        
-        <!-- Common Phrases Section -->
-        <div class="section">
-            <h2>Common Phrases</h2>
-            <div class="phrases">
-                <div class="phrase">
-                    <p><span>Wie geht's?</span> - How are you?</p>
-                    <button onclick="playAudio('wie_gehts.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Danke</span> - Thank you</p>
-                    <button onclick="playAudio('danke.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Entschuldigung</span> - Excuse me</p>
-                    <button onclick="playAudio('entschuldigung.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Bitte</span> - Please</p>
-                    <button onclick="playAudio('bitte.mp3')">⏵</button>
-                </div>
-                <div class="phrase">
-                    <p><span>Ich verstehe nicht</span> - I don't understand</p>
-                    <button onclick="playAudio('ich_verstehe_nicht.mp3')">⏵</button>
-                </div>
+            <div class="intro-text">
+                <span class="intro-badge">🇩🇪 A1 Level</span>
+                <h1 class="intro-title">
+                    Learn <span class="intro-highlight">German</span><br>From Scratch
+                </h1>
+                <p class="intro-desc">
+                    Master German with interactive lessons covering vocabulary, grammar, and cultural insights. Learn the most frequently used words and phrases with professionally recorded audio. From basic greetings to everyday conversations — your German journey starts here.
+                </p>
+                <a href="#lessons" class="intro-cta">Start Listening →</a>
             </div>
         </div>
     </section>
-    <div class="quiz">
-        <button><a href="/german_quiz">Take Quiz</a></button>
+
+    <!-- ═══ LESSONS ═══ -->
+    <div class="lessons-section" id="lessons">
+        <div class="lessons-container">
+
+            <!-- Greetings -->
+            <div class="lesson-card">
+                <div class="lesson-card-header">
+                    <span class="lesson-card-icon">👋</span>
+                    <h2 class="lesson-card-title">Greetings</h2>
+                </div>
+                <div class="phrases">
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Hallo</span><span class="phrase-meaning">Hello</span></div>
+                        <button class="play-btn" onclick="playAudio('hallo.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Guten Tag</span><span class="phrase-meaning">Good day</span></div>
+                        <button class="play-btn" onclick="playAudio('guten_tag.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Guten Abend</span><span class="phrase-meaning">Good evening</span></div>
+                        <button class="play-btn" onclick="playAudio('guten_abend.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Auf Wiedersehen</span><span class="phrase-meaning">Goodbye</span></div>
+                        <button class="play-btn" onclick="playAudio('auf_wiedersehen.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Bis bald</span><span class="phrase-meaning">See you soon</span></div>
+                        <button class="play-btn" onclick="playAudio('bis_bald.mp3')" title="Play">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Basic Sentences -->
+            <div class="lesson-card">
+                <div class="lesson-card-header">
+                    <span class="lesson-card-icon">💬</span>
+                    <h2 class="lesson-card-title">Basic Sentences</h2>
+                </div>
+                <div class="phrases">
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Ich heiße…</span><span class="phrase-meaning">My name is…</span></div>
+                        <button class="play-btn" onclick="playAudio('ich_heisse.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Ich komme aus…</span><span class="phrase-meaning">I come from…</span></div>
+                        <button class="play-btn" onclick="playAudio('ich_komme_aus.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Ich spreche ein bisschen Deutsch.</span><span class="phrase-meaning">I speak a little German.</span></div>
+                        <button class="play-btn" onclick="playAudio('ich_spreche_ein_bisschen_deutsch.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Wie spät ist es?</span><span class="phrase-meaning">What time is it?</span></div>
+                        <button class="play-btn" onclick="playAudio('wie_spaet_ist_es.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Können Sie mir helfen?</span><span class="phrase-meaning">Can you help me?</span></div>
+                        <button class="play-btn" onclick="playAudio('koennen_sie_mir_helfen.mp3')" title="Play">▶</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common Phrases -->
+            <div class="lesson-card">
+                <div class="lesson-card-header">
+                    <span class="lesson-card-icon">🗣️</span>
+                    <h2 class="lesson-card-title">Common Phrases</h2>
+                </div>
+                <div class="phrases">
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Wie geht's?</span><span class="phrase-meaning">How are you?</span></div>
+                        <button class="play-btn" onclick="playAudio('wie_gehts.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Danke</span><span class="phrase-meaning">Thank you</span></div>
+                        <button class="play-btn" onclick="playAudio('danke.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Entschuldigung</span><span class="phrase-meaning">Excuse me</span></div>
+                        <button class="play-btn" onclick="playAudio('entschuldigung.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Bitte</span><span class="phrase-meaning">Please</span></div>
+                        <button class="play-btn" onclick="playAudio('bitte.mp3')" title="Play">▶</button>
+                    </div>
+                    <div class="phrase">
+                        <div class="phrase-text"><span class="phrase-foreign">Ich verstehe nicht</span><span class="phrase-meaning">I don't understand</span></div>
+                        <button class="play-btn" onclick="playAudio('ich_verstehe_nicht.mp3')" title="Play">▶</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
-    
+
+    <!-- ═══ QUIZ CTA ═══ -->
+    <div class="quiz-strip">
+        <div class="quiz-strip-inner">
+            <div class="quiz-strip-text">
+                <h3>Ready to test your German? 🧠</h3>
+                <p>Take the quiz and see how much you've learned from this lesson.</p>
+            </div>
+            <a href="/german_quiz" class="quiz-btn">Take the Quiz →</a>
+        </div>
+    </div>
+
     <script>
-        // Function to play audio files
         function playAudio(filename) {
-            const audio = new Audio(`static/${filename}`);
-            audio.play().catch(error => {
-                console.error(`Error playing the file ${filename}:`, error);
-                alert("Audio could not be played. Please check the file path or browser permissions.");
-            });
+            const audio = new Audio(`/static/${filename}`);
+            audio.play().catch(e => console.error('Audio error:', e));
         }
     </script>
 </body>
