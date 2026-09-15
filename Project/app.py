@@ -7,13 +7,16 @@ import bcrypt
 from functools import wraps
 import random
 from wtforms import RadioField, SubmitField
+import os
+from dotenv import load_dotenv
 from pymongo import MongoClient
 from datetime import datetime, timedelta
 from bson import ObjectId
 import json
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key_here'
+load_dotenv()
+app.secret_key = os.getenv("SECRET_KEY")
 
 # Enable CSRF Protection
 csrf = CSRFProtect(app)
@@ -21,7 +24,7 @@ csrf = CSRFProtect(app)
 # ─────────────────────────────────────────────
 # MongoDB Configuration
 # ─────────────────────────────────────────────
-mongo_client = MongoClient('mongodb://localhost:27017/')
+mongo_client = MongoClient(os.getenv("MONGO_URI"))
 mongo_db = mongo_client['language_learning_db']
 quiz_scores_collection = mongo_db['quiz_scores']
 saved_words_collection = mongo_db['saved_words']
